@@ -1,6 +1,6 @@
 ﻿namespace KolmRakendustWindowsFormSamrjakov
 {
-    partial class Form1
+    partial class ImageViewer
     {
         /// <summary>
         /// Required designer variable.
@@ -37,4 +37,3 @@
         #endregion
     }
 }
-
