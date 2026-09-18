@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -13,7 +14,8 @@ namespace KolmRakendustWindowsFormSamrjakov
     public partial class ImageViewer : Form
     {
         PictureBox pictureBox;
-        Button button1, button2, button3, button4;
+        Button button1, button2, button3;
+        //CheckBox checkBox;
         public ImageViewer(string title, int width, int height, Color Backcolor, Color Frontcolor)
         {
             // Konstruktor
@@ -49,25 +51,23 @@ namespace KolmRakendustWindowsFormSamrjakov
             buttonPanel.Dock = DockStyle.Fill;
 
             button1 = new Button();
-            button1.Text = "Button 1";
+            button1.Text = "New Image";
             button1.Size = new Size(100, 40);
+            button1.Click += RandomImageButton_Click;
 
             button2 = new Button();
-            button2.Text = "Button 2";
+            button2.Text = "Clear Image";
             button2.Size = new Size(100, 40);
+            button2.Click += ClearImageButton_Click;
 
             button3 = new Button();
-            button3.Text = "Button 3";
+            button3.Text = "Close";
             button3.Size = new Size(100, 40);
-
-            button4 = new Button();
-            button4.Text = "Button 4";
-            button4.Size = new Size(100, 40);
+            button3.Click += CloseButton_Click;
 
             buttonPanel.Controls.Add(button1);
             buttonPanel.Controls.Add(button2);
             buttonPanel.Controls.Add(button3);
-            buttonPanel.Controls.Add(button4);
 
             buttonPanel.FlowDirection = FlowDirection.RightToLeft;
 
@@ -92,11 +92,26 @@ namespace KolmRakendustWindowsFormSamrjakov
 
             Controls.Add(labeltext);
 
+            //checkBox = new CheckBox();
+            //checkBox.Text = "Stretch";
+            //checkBox.Size = new Size(50, 50);
+            //checkBox.Location = new Point(20, 500);
+
+            // Random Images
+            Random random = new Random();
+            int RandomNumber = random.Next(1, 5);
+            Dictionary<int, string> Images = new Dictionary<int, string>();
+            Images.Add(1, "Image1");
+            Images.Add(2, "Image2");
+            Images.Add(3, "Image3");
+            Images.Add(4, "Image4");
+            string RandomImage = Images[RandomNumber];
+
             // Picture Box
             pictureBox = new PictureBox();
             pictureBox.Dock = DockStyle.Fill;
             pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBox.Image = Image.FromFile(@"..\..\Images\LordSolarMacharius.jpg");
+            pictureBox.Image = Image.FromFile($@"..\..\Images\{RandomImage}.jpg");
             pictureBox.BackColor = Backcolor;
 
             mainTableLayout.Controls.Add(pictureBox, 0, 0);
@@ -110,6 +125,29 @@ namespace KolmRakendustWindowsFormSamrjakov
             menuSettings.MenuItems.Add(menuBrightTheme);
             menu.MenuItems.Add(menuSettings);
             Menu = menu;
+        }
+
+        private void CloseButton_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void ClearImageButton_Click(object sender, EventArgs e)
+        {
+            pictureBox.Image = null;
+        }
+
+        private void RandomImageButton_Click(object sender, EventArgs e)
+        {
+            Random random = new Random();
+            int RandomNumber = random.Next(1, 5);
+            Dictionary<int, string> Images = new Dictionary<int, string>();
+            Images.Add(1, "Image1");
+            Images.Add(2, "Image2");
+            Images.Add(3, "Image3");
+            Images.Add(4, "Image4");
+            string RandomImage = Images[RandomNumber];
+            pictureBox.Image = Image.FromFile($@"..\..\Images\{RandomImage}.jpg");
         }
 
         private void DarkTheme(object sender, EventArgs e)

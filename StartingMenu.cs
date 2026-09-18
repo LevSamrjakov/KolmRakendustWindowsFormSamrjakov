@@ -103,7 +103,8 @@ namespace KolmRakendustWindowsFormSamrjakov
 
         private void OpenMathQuiz(object sender, EventArgs e)
         {
-
+            MathQuiz mathQuiz = new MathQuiz("Math Quiz", 600, 600, Backcolor, Frontcolor);
+            mathQuiz.Show();
         }
 
         private void OpenImagePairsGame(object sender, EventArgs e)

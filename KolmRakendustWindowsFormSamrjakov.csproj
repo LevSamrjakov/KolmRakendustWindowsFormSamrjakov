@@ -46,6 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MathQuiz.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MathQuiz.Designer.cs">
+      <DependentUpon>MathQuiz.cs</DependentUpon>
+    </Compile>
     <Compile Include="ImageViewer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -83,7 +89,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Images\LordSolarMacharius.jpg" />
+    <Content Include="Images\Image1.jpg" />
+    <Content Include="Images\Image2.jpg" />
+    <Content Include="Images\Image3.jpg" />
+    <Content Include="Images\Image4.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
