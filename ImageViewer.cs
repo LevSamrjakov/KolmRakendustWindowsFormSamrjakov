@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+using System.Drawing.Imaging;
 using System.Windows.Forms;
 
 namespace KolmRakendustWindowsFormSamrjakov
@@ -14,8 +10,12 @@ namespace KolmRakendustWindowsFormSamrjakov
     public partial class ImageViewer : Form
     {
         PictureBox pictureBox;
-        Button button1, button2, button3;
-        //CheckBox checkBox;
+        Button button1, button2, button3, button4, button5, button6;
+        CheckBox checkBox;
+        OpenFileDialog openFileDialog;
+        ColorDialog colorDialog;
+        SaveFileDialog saveFileDialog;
+
         public ImageViewer(string title, int width, int height, Color Backcolor, Color Frontcolor)
         {
             // Konstruktor
@@ -27,109 +27,201 @@ namespace KolmRakendustWindowsFormSamrjakov
 
             // Main Table Layout
             TableLayoutPanel mainTableLayout = new TableLayoutPanel();
+
             mainTableLayout.Dock = DockStyle.Fill;
+
+            // Columns
+            mainTableLayout.ColumnCount = 2;
+
+            mainTableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
+
+            mainTableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 85F));
 
             // Rows
             mainTableLayout.RowCount = 2;
-            mainTableLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 95F));
-            mainTableLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 15F));
+
+            mainTableLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 90F));
+
+            mainTableLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
 
             // Separation
             mainTableLayout.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
 
             Controls.Add(mainTableLayout);
 
-            // Lower Table Layout
-            TableLayoutPanel lowerTableLayout = new TableLayoutPanel();
-            lowerTableLayout.Dock = DockStyle.Fill;
+            // Picture Box
+            pictureBox = new PictureBox();
 
-            mainTableLayout.Controls.Add(lowerTableLayout, 0, 0);
+            pictureBox.Dock = DockStyle.Fill;
+
+            pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+
+            pictureBox.BackColor = Backcolor;
+
+            pictureBox.BorderStyle = BorderStyle.Fixed3D;
+
+            // PictureBox uses both columns
+            mainTableLayout.SetColumnSpan(pictureBox, 2);
+
+            mainTableLayout.Controls.Add(pictureBox, 0, 0);
+
+            // CheckBox
+            checkBox = new CheckBox();
+
+            checkBox.Text = "Stretch";
+            checkBox.AutoSize = true;
+
+            checkBox.Anchor = AnchorStyles.Left;
+
+            checkBox.CheckedChanged += CheckBox_CheckedChanged;
+
+            mainTableLayout.Controls.Add(checkBox, 0, 1);
 
             // Buttons Panel
             FlowLayoutPanel buttonPanel = new FlowLayoutPanel();
 
             buttonPanel.Dock = DockStyle.Fill;
 
-            button1 = new Button();
-            button1.Text = "New Image";
-            button1.Size = new Size(100, 40);
-            button1.Click += RandomImageButton_Click;
-
-            button2 = new Button();
-            button2.Text = "Clear Image";
-            button2.Size = new Size(100, 40);
-            button2.Click += ClearImageButton_Click;
-
-            button3 = new Button();
-            button3.Text = "Close";
-            button3.Size = new Size(100, 40);
-            button3.Click += CloseButton_Click;
-
-            buttonPanel.Controls.Add(button1);
-            buttonPanel.Controls.Add(button2);
-            buttonPanel.Controls.Add(button3);
-
             buttonPanel.FlowDirection = FlowDirection.RightToLeft;
 
             buttonPanel.WrapContents = false;
 
-            lowerTableLayout.Controls.Add(buttonPanel, 1, 0);
+            mainTableLayout.Controls.Add(buttonPanel, 1, 1);
 
-            // Buttons
-            //Button menuButton = new Button();
-            //menuButton.Size = new Size(100, 50);
-            //menuButton.Location = new Point(550, 100);
-            //menuButton.Text = "Exit to Main Menu";
-            //menuButton.Click += OpenMainMenu;
-            //Controls.Add(menuButton);
+            // Button 1
+            button1 = new Button();
 
-            // Label
-            Label labeltext = new Label();
-            labeltext.Text = "Test";
-            labeltext.Dock = DockStyle.Fill;
-            labeltext.TextAlign = ContentAlignment.MiddleCenter;
-            labeltext.Font = new Font("Arial", 20, FontStyle.Bold);
+            button1.Text = "Select a picture";
+            button1.Size = new Size(120, 40);
 
-            Controls.Add(labeltext);
+            button1.Click += ShowPictureButton_Click;
 
-            //checkBox = new CheckBox();
-            //checkBox.Text = "Stretch";
-            //checkBox.Size = new Size(50, 50);
-            //checkBox.Location = new Point(20, 500);
+            buttonPanel.Controls.Add(button1);
 
-            // Random Images
-            Random random = new Random();
-            int RandomNumber = random.Next(1, 5);
-            Dictionary<int, string> Images = new Dictionary<int, string>();
-            Images.Add(1, "Image1");
-            Images.Add(2, "Image2");
-            Images.Add(3, "Image3");
-            Images.Add(4, "Image4");
-            string RandomImage = Images[RandomNumber];
+            // Button 2
+            button2 = new Button();
 
-            // Picture Box
-            pictureBox = new PictureBox();
-            pictureBox.Dock = DockStyle.Fill;
-            pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBox.Image = Image.FromFile($@"..\..\Images\{RandomImage}.jpg");
-            pictureBox.BackColor = Backcolor;
+            button2.Text = "Clear the picture";
+            button2.Size = new Size(120, 40);
 
-            mainTableLayout.Controls.Add(pictureBox, 0, 0);
+            button2.Click += ClearImageButton_Click;
 
-            // Settings
-            System.Windows.Forms.MainMenu menu = new System.Windows.Forms.MainMenu();
+            buttonPanel.Controls.Add(button2);
+
+            // Button 3
+            button3 = new Button();
+
+            button3.Text = "Set background color";
+
+            button3.Size = new Size(150, 40);
+
+            button3.Click += BackgroundColorButton_Click;
+
+            buttonPanel.Controls.Add(button3);
+
+            // Button 4
+            button4 = new Button();
+            button4.Text = "Save picture";
+            button4.Size = new Size(120, 40);
+            button4.Click += SavePictureButton_Click;
+            buttonPanel.Controls.Add(button4);
+
+            // Button 5
+            button5 = new Button();
+            button5.Text = "Close";
+            button5.Size = new Size(100, 40);
+            button5.Click += CloseButton_Click;
+            buttonPanel.Controls.Add(button5);
+
+            // Button 6
+            button6 = new Button();
+            button6.Text = "Images";
+            button6.Size = new Size(80, 40);
+            button6.Click += ImageMenuButton_Click;
+            buttonPanel.Controls.Add(button6);
+
+            // Open File Dialog
+            openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif|" + "All Files|*.*";
+
+            // Color Dialog
+            colorDialog = new ColorDialog();
+
+            // Save File Dialog
+            saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Title = "Save picture";
+            saveFileDialog.Filter = "PNG Image|*.png|" + "JPEG Image|*.jpg|" + "Bitmap Image|*.bmp|" + "GIF Image|*.gif";
+
+
+            //// Random Images
+            //Random random = new Random();
+
+            //int RandomNumber = random.Next(1, 5);
+
+            //Dictionary<int, string> Images = new Dictionary<int, string>();
+
+            //Images.Add(1, "Image1");
+            //Images.Add(2, "Image2");
+            //Images.Add(3, "Image3");
+            //Images.Add(4, "Image4");
+
+            //string RandomImage = Images[RandomNumber];
+
+            //pictureBox.Image = Image.FromFile($@"..\..\Images\{RandomImage}.jpg");
+
+            // Settings Menu
+            MainMenu menu = new MainMenu();
+
             MenuItem menuSettings = new MenuItem("Settings");
+
             MenuItem menuDarkTheme = new MenuItem("Dark Theme", new EventHandler(DarkTheme));
+
             menuSettings.MenuItems.Add(menuDarkTheme);
+
             MenuItem menuBrightTheme = new MenuItem("Bright Theme", new EventHandler(BrightTheme));
+
             menuSettings.MenuItems.Add(menuBrightTheme);
+
             menu.MenuItems.Add(menuSettings);
+
             Menu = menu;
         }
 
-        private void CloseButton_Click(object sender, EventArgs e)
+        private void ImageMenuButton_Click(object sender, EventArgs e)
         {
-            this.Close();
+            ImageMenu imageMenu = new ImageMenu(pictureBox);
+            imageMenu.ShowDialog();
+        }
+
+        private void ShowPictureButton_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                pictureBox.Load(openFileDialog.FileName);
+
+                AddImageToFolder(openFileDialog.FileName);
+            }
+        }
+
+        private void AddImageToFolder(string imagePath)
+        {
+            string imageFolder = Path.GetFullPath(@"..\..\Images");
+
+            if (!Directory.Exists(imageFolder))
+            {
+                Directory.CreateDirectory(imageFolder);
+            }
+
+            string imageName = Path.GetFileName(imagePath);
+
+            string newImagePath = Path.Combine(imageFolder, imageName);
+
+            if (File.Exists(newImagePath))
+            {
+                return;
+            }
+
+            File.Copy(imagePath, newImagePath);
         }
 
         private void ClearImageButton_Click(object sender, EventArgs e)
@@ -137,17 +229,62 @@ namespace KolmRakendustWindowsFormSamrjakov
             pictureBox.Image = null;
         }
 
-        private void RandomImageButton_Click(object sender, EventArgs e)
+        private void BackgroundColorButton_Click(object sender, EventArgs e)
         {
-            Random random = new Random();
-            int RandomNumber = random.Next(1, 5);
-            Dictionary<int, string> Images = new Dictionary<int, string>();
-            Images.Add(1, "Image1");
-            Images.Add(2, "Image2");
-            Images.Add(3, "Image3");
-            Images.Add(4, "Image4");
-            string RandomImage = Images[RandomNumber];
-            pictureBox.Image = Image.FromFile($@"..\..\Images\{RandomImage}.jpg");
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                pictureBox.BackColor = colorDialog.Color;
+            }
+        }
+
+        private void CloseButton_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void CheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox.Checked)
+            {
+                pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            }
+            else
+            {
+                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+            }
+        }
+
+        private void SavePictureButton_Click(object sender, EventArgs e)
+        {
+            if (pictureBox.Image == null)
+            {
+                MessageBox.Show("There is no image to save.");
+                return;
+            }
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                ImageFormat format = ImageFormat.Png;
+
+                if (saveFileDialog.FilterIndex == 1)
+                {
+                    format = ImageFormat.Png;
+                }
+                else if (saveFileDialog.FilterIndex == 2)
+                {
+                    format = ImageFormat.Jpeg;
+                }
+                else if (saveFileDialog.FilterIndex == 3)
+                {
+                    format = ImageFormat.Bmp;
+                }
+                else if (saveFileDialog.FilterIndex == 4)
+                {
+                    format = ImageFormat.Gif;
+                }
+
+                pictureBox.Image.Save(saveFileDialog.FileName, format);
+            }
         }
 
         private void DarkTheme(object sender, EventArgs e)
@@ -163,12 +300,5 @@ namespace KolmRakendustWindowsFormSamrjakov
             ForeColor = Color.Black;
             pictureBox.BackColor = Color.White;
         }
-
-        //private void OpenMainMenu(object sender, EventArgs e)
-        //{
-        //    StartingMenu startingMenu = new StartingMenu();
-        //    startingMenu.Show();
-
-        //}
     }
 }
