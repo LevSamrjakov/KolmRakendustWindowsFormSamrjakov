@@ -63,7 +63,7 @@ namespace KolmRakendustWindowsFormSamrjakov
             button3.Location = new Point(200, 350);
             button3.Height = 50;
             button3.Width = 200;
-            button3.Click += OpenImagePairsGame;
+            button3.Click += OpenImageMatchGame;
             Controls.Add(button3);
 
             // 4. Button: Exit
@@ -144,9 +144,10 @@ namespace KolmRakendustWindowsFormSamrjakov
             mathQuiz.Show();
         }
 
-        private void OpenImagePairsGame(object sender, EventArgs e)
+        private void OpenImageMatchGame(object sender, EventArgs e)
         {
-
+            ImageMatch imageMatch = new ImageMatch("Image Matcher", 600, 600);
+            imageMatch.Show();
         }
 
         private void ExitApplication(object sender, EventArgs e)

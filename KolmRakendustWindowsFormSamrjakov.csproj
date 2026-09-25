@@ -46,6 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ImageMatch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ImageMatch.Designer.cs">
+      <DependentUpon>ImageMatch.cs</DependentUpon>
+    </Compile>
     <Compile Include="ImageMenu.cs">
       <SubType>Form</SubType>
     </Compile>

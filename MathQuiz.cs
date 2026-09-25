@@ -14,20 +14,26 @@ namespace KolmRakendustWindowsFormSamrjakov
         // Settings
 
         Label difficultyLabel, gameModeLabel, parametersLabel;
-        Label currentDifficultyLabel, timeParameterLabel, minimumParameterLabel, maximumParameterLabel;
+        Label currentDifficultyLabel, timeParameterLabel;
+        Label minimumParameterLabel, maximumParameterLabel;
+        Label currentGamemodeLabel;
+
         Button easyButton, mediumButton, hardButton, customButton;
         Button standardButton, continuousButton;
         Button backButton;
+
         NumericUpDown customTime, customNumber;
 
         // Quiz
 
         Label timeLabel, timeLeftLabel;
-        Label question1Label, question2Label, question3Label, question4Label;
+        Label question1Label, question2Label;
+        Label question3Label, question4Label;
         Label completedQuestionsLabel;
 
         NumericUpDown answer1, answer2, answer3, answer4;
 
+        Button mainMenuButton;
         Button checkAnswersButton;
 
         // Timer
@@ -38,11 +44,14 @@ namespace KolmRakendustWindowsFormSamrjakov
 
         Random randomizer = new Random();
 
-        // Question data
+        // Questions Data
 
-        int question1Answer, question2Answer, question3Answer, question4Answer;
+        int question1Answer;
+        int question2Answer;
+        int question3Answer;
+        int question4Answer;
 
-        // Difficulty
+        // Default Difficulty
 
         string difficulty = "Easy";
 
@@ -50,58 +59,60 @@ namespace KolmRakendustWindowsFormSamrjakov
         int minimumNumber = 1;
         int maximumNumber = 10;
 
-        // Game Mode
+        // Default Gamemode
 
         string gameMode = "Standard";
 
         int completedQuestions = 0;
 
-        // Time
+        // Default Time
 
         int timeLeft;
 
-        // Theme
+        // Default Theme
 
-        Color Backcolor, Frontcolor;
+        Color Backcolor;
+        Color Frontcolor;
+
+        // Constructor
 
         public MathQuiz(string title, int width, int height, Color Backcolor, Color Frontcolor)
         {
-            // Constructor
-
             Text = title;
             Size = new Size(width, height);
             StartPosition = FormStartPosition.CenterScreen;
 
-            // Window Theme / Colors
+            // Theme
+            this.Backcolor = Backcolor;
+            this.Frontcolor = Frontcolor;
 
-            this.Backcolor = BackColor = Backcolor;
-            this.Frontcolor = ForeColor = Frontcolor;
+            BackColor = Backcolor;
+            ForeColor = Frontcolor;
 
-            // Form Settings
-
+            // Form settings
             FormBorderStyle = FormBorderStyle.Fixed3D;
             MaximizeBox = false;
 
             // Timer
-
             timer1 = new Timer();
             timer1.Interval = 1000;
             timer1.Tick += Timer1_Tick;
 
-            // Main Menu
-
+            // Main menu
             ShowMainMenu();
 
-            // Settings Menu
-
+            // Menu
             MainMenu menu = new MainMenu();
 
             MenuItem menuSettings = new MenuItem("Settings");
 
-            MenuItem menuDarkTheme = new MenuItem("Dark Theme", new EventHandler(DarkTheme));
-            menuSettings.MenuItems.Add(menuDarkTheme);
+            MenuItem menuDarkTheme =
+                new MenuItem("Dark Theme", DarkTheme);
 
-            MenuItem menuBrightTheme = new MenuItem("Bright Theme", new EventHandler(BrightTheme));
+            MenuItem menuBrightTheme =
+                new MenuItem("Bright Theme", BrightTheme);
+
+            menuSettings.MenuItems.Add(menuDarkTheme);
             menuSettings.MenuItems.Add(menuBrightTheme);
 
             menu.MenuItems.Add(menuSettings);
@@ -109,15 +120,11 @@ namespace KolmRakendustWindowsFormSamrjakov
             Menu = menu;
         }
 
-        // ==========================================
-        // MAIN MENU
-        // ==========================================
+        // Main Menu
 
         private void ShowMainMenu()
         {
             Controls.Clear();
-
-            // Title
 
             title = new Label();
             title.Text = "Math Quiz";
@@ -126,8 +133,6 @@ namespace KolmRakendustWindowsFormSamrjakov
             title.Location = new Point(215, 70);
             Controls.Add(title);
 
-            // Start Game Button
-
             startGameButton = new Button();
             startGameButton.Text = "Start Game";
             startGameButton.Font = new Font("Arial", 12, FontStyle.Bold);
@@ -135,8 +140,6 @@ namespace KolmRakendustWindowsFormSamrjakov
             startGameButton.Location = new Point(220, 180);
             startGameButton.Click += StartGameButton_Click;
             Controls.Add(startGameButton);
-
-            // Settings Button
 
             settingsButton = new Button();
             settingsButton.Text = "Settings";
@@ -149,15 +152,11 @@ namespace KolmRakendustWindowsFormSamrjakov
             ApplyTheme();
         }
 
-        // ==========================================
-        // SETTINGS
-        // ==========================================
+        // Settings
 
         private void ShowSettings()
         {
             Controls.Clear();
-
-            // Title
 
             title = new Label();
             title.Text = "Settings";
@@ -167,7 +166,6 @@ namespace KolmRakendustWindowsFormSamrjakov
             Controls.Add(title);
 
             // Difficulty
-
             difficultyLabel = new Label();
             difficultyLabel.Text = "Difficulty";
             difficultyLabel.Font = new Font("Arial", 14, FontStyle.Bold);
@@ -204,7 +202,6 @@ namespace KolmRakendustWindowsFormSamrjakov
             Controls.Add(customButton);
 
             // Game Mode
-
             gameModeLabel = new Label();
             gameModeLabel.Text = "Game Mode";
             gameModeLabel.Font = new Font("Arial", 14, FontStyle.Bold);
@@ -227,7 +224,6 @@ namespace KolmRakendustWindowsFormSamrjakov
             Controls.Add(continuousButton);
 
             // Parameters
-
             parametersLabel = new Label();
             parametersLabel.Text = "Parameters";
             parametersLabel.Font = new Font("Arial", 14, FontStyle.Bold);
@@ -236,72 +232,87 @@ namespace KolmRakendustWindowsFormSamrjakov
             Controls.Add(parametersLabel);
 
             currentDifficultyLabel = new Label();
-            currentDifficultyLabel.Text = "Difficulty: " + difficulty;
             currentDifficultyLabel.AutoSize = true;
             currentDifficultyLabel.Location = new Point(365, 135);
             Controls.Add(currentDifficultyLabel);
 
+            currentGamemodeLabel = new Label();
+            currentGamemodeLabel.AutoSize = true;
+            currentGamemodeLabel.Location = new Point(365, 165);
+            Controls.Add(currentGamemodeLabel);
+
             timeParameterLabel = new Label();
-            timeParameterLabel.Text = "Time: " + gameTime + " sec";
             timeParameterLabel.AutoSize = true;
-            timeParameterLabel.Location = new Point(365, 165);
+            timeParameterLabel.Location = new Point(365, 195);
             Controls.Add(timeParameterLabel);
 
             minimumParameterLabel = new Label();
-            minimumParameterLabel.Text = "Minimum: " + minimumNumber;
             minimumParameterLabel.AutoSize = true;
-            minimumParameterLabel.Location = new Point(365, 195);
+            minimumParameterLabel.Location = new Point(365, 225);
             Controls.Add(minimumParameterLabel);
 
             maximumParameterLabel = new Label();
-            maximumParameterLabel.Text = "Maximum: " + maximumNumber;
             maximumParameterLabel.AutoSize = true;
-            maximumParameterLabel.Location = new Point(365, 225);
+            maximumParameterLabel.Location = new Point(365, 255);
             Controls.Add(maximumParameterLabel);
 
-            // Custom Parameters
-
+            // Custom Time
             customTime = new NumericUpDown();
             customTime.Minimum = 10;
             customTime.Maximum = 300;
-            customTime.Value = gameTime;
+            customTime.Value = Math.Min(
+                Math.Max(gameTime, customTime.Minimum),
+                customTime.Maximum);
+
             customTime.Size = new Size(100, 30);
-            customTime.Location = new Point(365, 260);
+            customTime.Location = new Point(365, 285);
             customTime.Visible = false;
+            customTime.ValueChanged += CustomTime_ValueChanged;
             Controls.Add(customTime);
 
+            // Custom Maximum Number
             customNumber = new NumericUpDown();
             customNumber.Minimum = 5;
             customNumber.Maximum = 1000;
-            customNumber.Value = maximumNumber;
+            customNumber.Value = Math.Min(
+                Math.Max(maximumNumber, customNumber.Minimum),
+                customNumber.Maximum);
+
             customNumber.Size = new Size(100, 30);
-            customNumber.Location = new Point(365, 300);
+            customNumber.Location = new Point(365, 320);
             customNumber.Visible = false;
+            customNumber.ValueChanged += CustomNumber_ValueChanged;
             Controls.Add(customNumber);
 
             // Back
-
             backButton = new Button();
             backButton.Text = "Back";
             backButton.Size = new Size(100, 40);
-            backButton.Location = new Point(250, 340);
+            backButton.Location = new Point(250, 370);
             backButton.Click += BackButton_Click;
             Controls.Add(backButton);
 
             UpdateSettings();
-
             ApplyTheme();
         }
 
-        // ==========================================
-        // SETTINGS UPDATE
-        // ==========================================
+        // Settings Change
 
         private void UpdateSettings()
         {
+            if (currentDifficultyLabel == null)
+            {
+                return;
+            }
+
             currentDifficultyLabel.Text = "Difficulty: " + difficulty;
+
+            currentGamemodeLabel.Text = "Gamemode: " + gameMode;
+
             timeParameterLabel.Text = "Time: " + gameTime + " sec";
+
             minimumParameterLabel.Text = "Minimum: " + minimumNumber;
+
             maximumParameterLabel.Text = "Maximum: " + maximumNumber;
 
             if (difficulty == "Custom")
@@ -309,8 +320,9 @@ namespace KolmRakendustWindowsFormSamrjakov
                 customTime.Visible = true;
                 customNumber.Visible = true;
 
-                customTime.Value = gameTime;
-                customNumber.Value = maximumNumber;
+                customTime.Value = Math.Min(Math.Max(gameTime, (int)customTime.Minimum), (int)customTime.Maximum);
+
+                customNumber.Value = Math.Min(Math.Max(maximumNumber, (int)customNumber.Minimum), (int)customNumber.Maximum);
             }
             else
             {
@@ -319,9 +331,27 @@ namespace KolmRakendustWindowsFormSamrjakov
             }
         }
 
-        // ==========================================
-        // DIFFICULTY
-        // ==========================================
+        // Custom Settings
+
+        private void CustomTime_ValueChanged(object sender, EventArgs e)
+        {
+            if (difficulty == "Custom")
+            {
+                gameTime = (int)customTime.Value;
+                UpdateSettings();
+            }
+        }
+
+        private void CustomNumber_ValueChanged(object sender, EventArgs e)
+        {
+            if (difficulty == "Custom")
+            {
+                maximumNumber = (int)customNumber.Value;
+                UpdateSettings();
+            }
+        }
+
+        // Difficulty
 
         private void SetEasy()
         {
@@ -353,10 +383,6 @@ namespace KolmRakendustWindowsFormSamrjakov
             UpdateSettings();
         }
 
-        // ==========================================
-        // CUSTOM DIFFICULTY
-        // ==========================================
-
         private void SetCustom()
         {
             difficulty = "Custom";
@@ -364,28 +390,42 @@ namespace KolmRakendustWindowsFormSamrjakov
             UpdateSettings();
         }
 
-        // ==========================================
-        // GAME MODE
-        // ==========================================
+        // Game Mode
 
         private void SetStandard()
         {
             gameMode = "Standard";
+            UpdateSettings();
         }
 
         private void SetContinuous()
         {
             gameMode = "Continuous";
+            UpdateSettings();
         }
 
-        // ==========================================
-        // BUTTON EVENTS
-        // ==========================================
+        // Buttons Click
 
         private void StartGameButton_Click(object sender, EventArgs e)
         {
+            // Make sure custom values are saved.
+            if (difficulty == "Custom")
+            {
+                gameTime = (int)customTime.Value;
+                maximumNumber = (int)customNumber.Value;
+            }
+
+            completedQuestions = 0;
+
             ShowQuiz();
             StartTheQuiz();
+        }
+
+        private void MainMenuButton_Click(object sender, EventArgs e)
+        {
+            timer1.Stop();
+
+            ShowMainMenu();
         }
 
         private void SettingsButton_Click(object sender, EventArgs e)
@@ -408,7 +448,7 @@ namespace KolmRakendustWindowsFormSamrjakov
             SetHard();
         }
 
-        private void CustomButton_Click(object sender, EventArgs e)
+        private void CustomButton_Click(object sender,  EventArgs e)
         {
             SetCustom();
         }
@@ -428,16 +468,13 @@ namespace KolmRakendustWindowsFormSamrjakov
             ShowMainMenu();
         }
 
-        // ==========================================
-        // QUIZ
-        // ==========================================
+        // Quiz
 
         private void ShowQuiz()
         {
             Controls.Clear();
 
             // Time Left
-
             timeLeftLabel = new Label();
             timeLeftLabel.Text = "Time Left:";
             timeLeftLabel.Font = new Font("Arial", 12, FontStyle.Bold);
@@ -445,8 +482,7 @@ namespace KolmRakendustWindowsFormSamrjakov
             timeLeftLabel.Location = new Point(ClientSize.Width - 180, 20);
             Controls.Add(timeLeftLabel);
 
-            // Timer Label
-
+            // Timer
             timeLabel = new Label();
             timeLabel.Text = "";
             timeLabel.Font = new Font("Arial", 12, FontStyle.Bold);
@@ -457,88 +493,42 @@ namespace KolmRakendustWindowsFormSamrjakov
             Controls.Add(timeLabel);
 
             // Completed Questions
-
             completedQuestionsLabel = new Label();
-            completedQuestionsLabel.Text = "Questions completed: 0";
+            completedQuestionsLabel.Text = "Questions completed: " + completedQuestions;
             completedQuestionsLabel.Font = new Font("Arial", 12, FontStyle.Bold);
             completedQuestionsLabel.AutoSize = true;
             completedQuestionsLabel.Location = new Point(80, 20);
             Controls.Add(completedQuestionsLabel);
 
             // Question 1
-
-            question1Label = new Label();
-            question1Label.Font = new Font("Arial", 18);
-            question1Label.Size = new Size(250, 50);
-            question1Label.Location = new Point(80, 80);
-            question1Label.TextAlign = ContentAlignment.MiddleLeft;
+            question1Label = CreateQuestionLabel(80);
             Controls.Add(question1Label);
 
-            answer1 = new NumericUpDown();
-            answer1.Font = new Font("Arial", 18);
-            answer1.Size = new Size(100, 40);
-            answer1.Location = new Point(350, 85);
-            answer1.TabIndex = 1;
-            answer1.Maximum = 100000;
-            answer1.Enter += Answer_Enter;
+            answer1 = CreateAnswerBox(85, 1);
             Controls.Add(answer1);
 
             // Question 2
-
-            question2Label = new Label();
-            question2Label.Font = new Font("Arial", 18);
-            question2Label.Size = new Size(250, 50);
-            question2Label.Location = new Point(80, 140);
-            question2Label.TextAlign = ContentAlignment.MiddleLeft;
+            question2Label = CreateQuestionLabel(140);
             Controls.Add(question2Label);
 
-            answer2 = new NumericUpDown();
-            answer2.Font = new Font("Arial", 18);
-            answer2.Size = new Size(100, 40);
-            answer2.Location = new Point(350, 145);
-            answer2.TabIndex = 2;
-            answer2.Maximum = 100000;
-            answer2.Enter += Answer_Enter;
+            answer2 = CreateAnswerBox(145, 2);
             Controls.Add(answer2);
 
             // Question 3
-
-            question3Label = new Label();
-            question3Label.Font = new Font("Arial", 18);
-            question3Label.Size = new Size(250, 50);
-            question3Label.Location = new Point(80, 200);
-            question3Label.TextAlign = ContentAlignment.MiddleLeft;
+            question3Label = CreateQuestionLabel(200);
             Controls.Add(question3Label);
 
-            answer3 = new NumericUpDown();
-            answer3.Font = new Font("Arial", 18);
-            answer3.Size = new Size(100, 40);
-            answer3.Location = new Point(350, 205);
-            answer3.TabIndex = 3;
-            answer3.Maximum = 100000;
-            answer3.Enter += Answer_Enter;
+            answer3 = CreateAnswerBox(205, 3);
             Controls.Add(answer3);
 
             // Question 4
-
-            question4Label = new Label();
-            question4Label.Font = new Font("Arial", 18);
-            question4Label.Size = new Size(250, 50);
-            question4Label.Location = new Point(80, 260);
-            question4Label.TextAlign = ContentAlignment.MiddleLeft;
+            question4Label = CreateQuestionLabel(260);
             Controls.Add(question4Label);
 
-            answer4 = new NumericUpDown();
-            answer4.Font = new Font("Arial", 18);
-            answer4.Size = new Size(100, 40);
-            answer4.Location = new Point(350, 265);
-            answer4.TabIndex = 4;
-            answer4.Maximum = 100000;
-            answer4.Enter += Answer_Enter;
+            answer4 = CreateAnswerBox(265, 4);
             Controls.Add(answer4);
 
             // Check Answers
-
             checkAnswersButton = new Button();
             checkAnswersButton.Text = "Check Answers";
             checkAnswersButton.Font = new Font("Arial", 12, FontStyle.Bold);
@@ -547,12 +537,51 @@ namespace KolmRakendustWindowsFormSamrjakov
             checkAnswersButton.Click += CheckAnswersButton_Click;
             Controls.Add(checkAnswersButton);
 
+            // Main Menu
+            mainMenuButton = new Button();
+            mainMenuButton.Text = "Main Menu";
+            mainMenuButton.Font = new Font("Arial", 12, FontStyle.Bold);
+            mainMenuButton.Size = new Size(180, 40);
+            mainMenuButton.Location = new Point(210, 400);
+            mainMenuButton.Click += MainMenuButton_Click;
+            Controls.Add(mainMenuButton);
+
+
             ApplyTheme();
         }
 
-        // ==========================================
-        // START QUIZ
-        // ==========================================
+        private Label CreateQuestionLabel(int y)
+        {
+            Label label = new Label();
+
+            label.Font = new Font("Arial", 18);
+            label.Size = new Size(250, 50);
+            label.Location = new Point(80, y);
+            label.TextAlign = ContentAlignment.MiddleLeft;
+
+            return label;
+        }
+
+        private NumericUpDown CreateAnswerBox(
+            int y,
+            int tabIndex)
+        {
+            NumericUpDown box = new NumericUpDown();
+
+            box.Font = new Font("Arial", 18);
+            box.Size = new Size(100, 40);
+            box.Location = new Point(350, y);
+            box.TabIndex = tabIndex;
+
+            // Large enough for 1000 × 1000.
+            box.Maximum = 1000000;
+
+            box.Enter += Answer_Enter;
+
+            return box;
+        }
+
+        // Quiz Start
 
         private void StartTheQuiz()
         {
@@ -568,33 +597,39 @@ namespace KolmRakendustWindowsFormSamrjakov
 
             checkAnswersButton.Enabled = true;
 
-            if (timer1.Enabled == false)
+            // Only starts / resets the timer when a new game begins.
+            // In Continuous mode, the timer does NOT reset when a new set of questions is generated.
+            if (!timer1.Enabled)
             {
                 timeLeft = gameTime;
+
                 timeLabel.Text = timeLeft + " sec";
+
                 timeLabel.BackColor = Backcolor;
+
                 timeLabel.ForeColor = Frontcolor;
+
                 timer1.Start();
             }
         }
 
-        // ==========================================
-        // CREATE RANDOM QUESTION
-        // ==========================================
+
+        // Random Question
 
         private void CreateQuestion(Label questionLabel, int questionNumber)
         {
             int questionType = randomizer.Next(1, 5);
+
             int number1;
             int number2;
             int answer;
 
             // Addition
-
             if (questionType == 1)
             {
                 number1 = randomizer.Next(minimumNumber, maximumNumber + 1);
-                number2 = randomizer.Next(minimumNumber, maximumNumber + 1);
+
+                number2 = randomizer.Next( minimumNumber, maximumNumber + 1);
 
                 answer = number1 + number2;
 
@@ -604,10 +639,10 @@ namespace KolmRakendustWindowsFormSamrjakov
             }
 
             // Subtraction
-
             else if (questionType == 2)
             {
                 number1 = randomizer.Next(minimumNumber, maximumNumber + 1);
+
                 number2 = randomizer.Next(minimumNumber, number1 + 1);
 
                 answer = number1 - number2;
@@ -618,10 +653,10 @@ namespace KolmRakendustWindowsFormSamrjakov
             }
 
             // Multiplication
-
             else if (questionType == 3)
             {
                 number1 = randomizer.Next(minimumNumber, maximumNumber + 1);
+
                 number2 = randomizer.Next(minimumNumber, maximumNumber + 1);
 
                 answer = number1 * number2;
@@ -632,7 +667,6 @@ namespace KolmRakendustWindowsFormSamrjakov
             }
 
             // Division
-
             else
             {
                 number2 = randomizer.Next(minimumNumber, maximumNumber + 1);
@@ -648,6 +682,8 @@ namespace KolmRakendustWindowsFormSamrjakov
                 SetQuestionAnswer(questionNumber, answer);
             }
         }
+
+        // Answers
 
         private void SetQuestionAnswer(int questionNumber, int answer)
         {
@@ -669,13 +705,11 @@ namespace KolmRakendustWindowsFormSamrjakov
             }
         }
 
-        // ==========================================
-        // CHECK ANSWERS
-        // ==========================================
+        // Check Answers Button
 
         private void CheckAnswersButton_Click(object sender, EventArgs e)
         {
-            if (timer1.Enabled == false)
+            if (!timer1.Enabled)
             {
                 return;
             }
@@ -690,7 +724,7 @@ namespace KolmRakendustWindowsFormSamrjakov
             if (answer2.Value != question2Answer)
             {
                 correct = false;
-            }
+            }      
 
             if (answer3.Value != question3Answer)
             {
@@ -710,6 +744,8 @@ namespace KolmRakendustWindowsFormSamrjakov
 
                     completedQuestionsLabel.Text = "Questions completed: " + completedQuestions;
 
+                    // Generate the next four questions
+                    // and reset the timer.
                     StartTheQuiz();
 
                     return;
@@ -727,9 +763,7 @@ namespace KolmRakendustWindowsFormSamrjakov
             MessageBox.Show("Some answers are incorrect.", "Math Quiz");
         }
 
-        // ==========================================
-        // TIMER
-        // ==========================================
+        // Timer
 
         private void Timer1_Tick(object sender, EventArgs e)
         {
@@ -742,6 +776,7 @@ namespace KolmRakendustWindowsFormSamrjakov
                 if (timeLeft <= 5)
                 {
                     timeLabel.BackColor = Color.Red;
+
                     timeLabel.ForeColor = Color.White;
                 }
             }
@@ -750,7 +785,9 @@ namespace KolmRakendustWindowsFormSamrjakov
                 timer1.Stop();
 
                 timeLabel.Text = "Time's up!";
+
                 timeLabel.BackColor = Color.Red;
+
                 timeLabel.ForeColor = Color.White;
 
                 checkAnswersButton.Enabled = false;
@@ -766,9 +803,7 @@ namespace KolmRakendustWindowsFormSamrjakov
             }
         }
 
-        // ==========================================
-        // ANSWER BOX
-        // ==========================================
+        // Answer Box
 
         private void Answer_Enter(object sender, EventArgs e)
         {
@@ -782,212 +817,127 @@ namespace KolmRakendustWindowsFormSamrjakov
             }
         }
 
-        // ==========================================
-        // DARK THEME
-        // ==========================================
+        // Dark Theme
 
         private void DarkTheme(object sender, EventArgs e)
         {
-            Backcolor = BackColor = Color.Black;
-            Frontcolor = ForeColor = Color.White;
+            Backcolor = Color.Black;
+            Frontcolor = Color.White;
 
             ApplyTheme();
         }
 
-        // ==========================================
-        // BRIGHT THEME
-        // ==========================================
+        // Bright Theme
 
-        private void BrightTheme(object sender, EventArgs e)
+        private void BrightTheme(
+            object sender,
+            EventArgs e)
         {
-            Backcolor = BackColor = Color.White;
-            Frontcolor = ForeColor = Color.Black;
+            Backcolor = Color.White;
+            Frontcolor = Color.Black;
 
             ApplyTheme();
         }
 
-        // ==========================================
-        // APPLY THEME
-        // ==========================================
+        // Apply Theme
 
         private void ApplyTheme()
         {
             BackColor = Backcolor;
             ForeColor = Frontcolor;
 
-            if (title != null)
-            {
-                title.ForeColor = Frontcolor;
-            }
+            ApplyLabelTheme(title);
 
-            if (startGameButton != null)
-            {
-                startGameButton.BackColor = Backcolor;
-                startGameButton.ForeColor = Frontcolor;
-            }
+            ApplyButtonTheme(startGameButton);
+            ApplyButtonTheme(settingsButton);
 
-            if (settingsButton != null)
-            {
-                settingsButton.BackColor = Backcolor;
-                settingsButton.ForeColor = Frontcolor;
-            }
+            ApplyLabelTheme(difficultyLabel);
+            ApplyLabelTheme(gameModeLabel);
+            ApplyLabelTheme(parametersLabel);
 
-            if (difficultyLabel != null)
-            {
-                difficultyLabel.ForeColor = Frontcolor;
-            }
+            ApplyLabelTheme(currentDifficultyLabel);
+            ApplyLabelTheme(currentGamemodeLabel);
+            ApplyLabelTheme(timeParameterLabel);
+            ApplyLabelTheme(minimumParameterLabel);
+            ApplyLabelTheme(maximumParameterLabel);
 
-            if (gameModeLabel != null)
-            {
-                gameModeLabel.ForeColor = Frontcolor;
-            }
+            ApplyButtonTheme(easyButton);
+            ApplyButtonTheme(mediumButton);
+            ApplyButtonTheme(hardButton);
+            ApplyButtonTheme(customButton);
 
-            if (parametersLabel != null)
-            {
-                parametersLabel.ForeColor = Frontcolor;
-            }
+            ApplyButtonTheme(standardButton);
+            ApplyButtonTheme(continuousButton);
+            ApplyButtonTheme(backButton);
 
-            if (currentDifficultyLabel != null)
-            {
-                currentDifficultyLabel.ForeColor = Frontcolor;
-            }
+            ApplyNumericTheme(customTime);
+            ApplyNumericTheme(customNumber);
 
-            if (timeParameterLabel != null)
-            {
-                timeParameterLabel.ForeColor = Frontcolor;
-            }
+            ApplyLabelTheme(timeLeftLabel);
+            ApplyLabelTheme(completedQuestionsLabel);
 
-            if (minimumParameterLabel != null)
-            {
-                minimumParameterLabel.ForeColor = Frontcolor;
-            }
+            ApplyLabelTheme(question1Label);
+            ApplyLabelTheme(question2Label);
+            ApplyLabelTheme(question3Label);
+            ApplyLabelTheme(question4Label);
 
-            if (maximumParameterLabel != null)
-            {
-                maximumParameterLabel.ForeColor = Frontcolor;
-            }
+            ApplyNumericTheme(answer1);
+            ApplyNumericTheme(answer2);
+            ApplyNumericTheme(answer3);
+            ApplyNumericTheme(answer4);
 
-            if (easyButton != null)
-            {
-                easyButton.BackColor = Backcolor;
-                easyButton.ForeColor = Frontcolor;
-            }
+            ApplyButtonTheme(checkAnswersButton);
+            ApplyButtonTheme(mainMenuButton);
 
-            if (mediumButton != null)
-            {
-                mediumButton.BackColor = Backcolor;
-                mediumButton.ForeColor = Frontcolor;
-            }
 
-            if (hardButton != null)
+            if (timeLabel != null)
             {
-                hardButton.BackColor = Backcolor;
-                hardButton.ForeColor = Frontcolor;
+                // Preserve red timer when five seconds or less remain.
+                if (timeLeft <= 5 && timer1.Enabled)
+                {
+                    timeLabel.BackColor = Color.Red;
+                    timeLabel.ForeColor = Color.White;
+                }
+                else if (timeLabel.Text == "Time's up!")
+                {
+                    timeLabel.BackColor = Color.Red;
+                    timeLabel.ForeColor = Color.White;
+                }
+                else
+                {
+                    timeLabel.BackColor = Backcolor;
+                    timeLabel.ForeColor = Frontcolor;
+                }
             }
+        }
 
-            if (customButton != null)
-            {
-                customButton.BackColor = Backcolor;
-                customButton.ForeColor = Frontcolor;
-            }
+        // Theme Methods
 
-            if (standardButton != null)
+        private void ApplyLabelTheme(Label label)
+        {
+            if (label != null)
             {
-                standardButton.BackColor = Backcolor;
-                standardButton.ForeColor = Frontcolor;
+                label.ForeColor = Frontcolor;
+                label.BackColor = Backcolor;
             }
+        }
 
-            if (continuousButton != null)
+        private void ApplyButtonTheme(Button button)
+        {
+            if (button != null)
             {
-                continuousButton.BackColor = Backcolor;
-                continuousButton.ForeColor = Frontcolor;
+                button.BackColor = Backcolor;
+                button.ForeColor = Frontcolor;
             }
+        }
 
-            if (backButton != null)
+        private void ApplyNumericTheme(
+            NumericUpDown numeric)
+        {
+            if (numeric != null)
             {
-                backButton.BackColor = Backcolor;
-                backButton.ForeColor = Frontcolor;
-            }
-
-            if (customTime != null)
-            {
-                customTime.BackColor = Backcolor;
-                customTime.ForeColor = Frontcolor;
-            }
-
-            if (customNumber != null)
-            {
-                customNumber.BackColor = Backcolor;
-                customNumber.ForeColor = Frontcolor;
-            }
-
-            if (timeLeftLabel != null)
-            {
-                timeLeftLabel.ForeColor = Frontcolor;
-            }
-
-            if (timeLabel != null && timeLeft <= 5)
-            {
-                timeLabel.ForeColor = Color.White;
-            }
-            else if (timeLabel != null)
-            {
-                timeLabel.ForeColor = Frontcolor;
-            }
-
-            if (completedQuestionsLabel != null)
-            {
-                completedQuestionsLabel.ForeColor = Frontcolor;
-            }
-
-            if (question1Label != null)
-            {
-                question1Label.ForeColor = Frontcolor;
-            }
-
-            if (question2Label != null)
-            {
-                question2Label.ForeColor = Frontcolor;
-            }
-
-            if (question3Label != null)
-            {
-                question3Label.ForeColor = Frontcolor;
-            }
-
-            if (question4Label != null)
-            {
-                question4Label.ForeColor = Frontcolor;
-            }
-
-            if (answer1 != null)
-            {
-                answer1.BackColor = Backcolor;
-                answer1.ForeColor = Frontcolor;
-            }
-
-            if (answer2 != null)
-            {
-                answer2.BackColor = Backcolor;
-                answer2.ForeColor = Frontcolor;
-            }
-
-            if (answer3 != null)
-            {
-                answer3.BackColor = Backcolor;
-                answer3.ForeColor = Frontcolor;
-            }
-
-            if (answer4 != null)
-            {
-                answer4.BackColor = Backcolor;
-                answer4.ForeColor = Frontcolor;
-            }
-
-            if (checkAnswersButton != null)
-            {
-                checkAnswersButton.BackColor = Backcolor;
-                checkAnswersButton.ForeColor = Frontcolor;
+                numeric.BackColor = Backcolor;
+                numeric.ForeColor = Frontcolor;
             }
         }
     }
