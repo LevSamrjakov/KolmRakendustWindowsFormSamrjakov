@@ -1,6 +1,6 @@
 ﻿namespace KolmRakendustWindowsFormSamrjakov
 {
-    partial class ImageViewer
+    partial class PildiVaataja
     {
         /// <summary>
         /// Required designer variable.

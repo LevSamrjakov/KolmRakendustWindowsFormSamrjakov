@@ -4,553 +4,548 @@ using System.Windows.Forms;
 
 namespace KolmRakendustWindowsFormSamrjakov
 {
-    public partial class MathQuiz : Form
+    public partial class Matemaatikaviktoriin : Form
     {
-        // Main Menu
+        // Peamenüü
 
-        Label title;
-        Button startGameButton, settingsButton;
+        Label pealkiri;
+        Button alustaMänguNupp, seadeteNupp;
 
-        // Settings
+        // Seaded
 
-        Label difficultyLabel, gameModeLabel, parametersLabel;
-        Label currentDifficultyLabel, timeParameterLabel;
-        Label minimumParameterLabel, maximumParameterLabel;
-        Label currentGamemodeLabel;
+        Label raskusLabel, mänguRežiimLabel, parameetridLabel;
+        Label praeguneRaskusLabel, aegParameeterLabel;
+        Label minimaalneParameeterLabel, maksimaalneParameeterLabel;
+        Label praeguneRežiimLabel;
 
-        Button easyButton, mediumButton, hardButton, customButton;
-        Button standardButton, continuousButton;
-        Button backButton;
+        Button lihtneNupp, keskmineNupp, raskeNupp, kohandatudNupp;
+        Button standardneNupp, pidevNupp;
+        Button tagasiNupp;
 
-        NumericUpDown customTime, customNumber;
+        NumericUpDown kohandatudAeg, kohandatudArv;
 
-        // Quiz
+        // Viktoriin
 
-        Label timeLabel, timeLeftLabel;
-        Label question1Label, question2Label;
-        Label question3Label, question4Label;
-        Label completedQuestionsLabel;
+        Label aegLabel, aegAllLabel;
+        Label küsimus1Label, küsimus2Label;
+        Label küsimus3Label, küsimus4Label;
+        Label lahendatudKüsimusedLabel;
 
-        NumericUpDown answer1, answer2, answer3, answer4;
+        NumericUpDown vastus1, vastus2, vastus3, vastus4;
 
-        Button mainMenuButton;
-        Button checkAnswersButton;
+        Button peaMenüüNupp;
+        Button kontrolliVastusedNupp;
 
-        // Timer
+        // Taimer
 
-        Timer timer1;
+        Timer taimer1;
 
-        // Random
+        // Juhuslik
 
-        Random randomizer = new Random();
+        Random juhuslik = new Random();
 
-        // Questions Data
+        // Küsimuste andmed
 
-        int question1Answer;
-        int question2Answer;
-        int question3Answer;
-        int question4Answer;
+        int küsimus1Vastus;
+        int küsimus2Vastus;
+        int küsimus3Vastus;
+        int küsimus4Vastus;
 
-        // Default Difficulty
+        // Vaikimisi raskusaste
 
-        string difficulty = "Easy";
+        string raskus = "Lihtne";
 
-        int gameTime = 60;
-        int minimumNumber = 1;
-        int maximumNumber = 10;
+        int mänguAeg = 60;
+        int minimaalneArv = 1;
+        int maksimaalneArv = 10;
 
-        // Default Gamemode
+        // Vaikimisi mänguviis
 
-        string gameMode = "Standard";
+        string mänguRežiim = "Standardne";
 
-        int completedQuestions = 0;
+        int lahendatudKüsimused = 0;
 
-        // Default Time
+        // Vaikimisi aeg
 
-        int timeLeft;
+        int aegAllesJäänud;
 
-        // Default Theme
+        // Vaikimisi teema
 
-        Color Backcolor;
-        Color Frontcolor;
+        Color Taustavärv;
+        Color Esiplaanivärv;
 
-        // Constructor
+        // Konstruktor
 
-        public MathQuiz(string title, int width, int height, Color Backcolor, Color Frontcolor)
+        public Matemaatikaviktoriin(string pealkirjaTekst, int laius, int kõrgus, Color Taustavärv, Color Esiplaanivärv)
         {
-            Text = title;
-            Size = new Size(width, height);
+            Text = pealkirjaTekst;
+            Size = new Size(laius, kõrgus);
             StartPosition = FormStartPosition.CenterScreen;
 
-            // Theme
-            this.Backcolor = Backcolor;
-            this.Frontcolor = Frontcolor;
+            // Teema
+            this.Taustavärv = Taustavärv;
+            this.Esiplaanivärv = Esiplaanivärv;
 
-            BackColor = Backcolor;
-            ForeColor = Frontcolor;
+            BackColor = Taustavärv;
+            ForeColor = Esiplaanivärv;
 
-            // Form settings
+            // Vormi seaded
             FormBorderStyle = FormBorderStyle.Fixed3D;
             MaximizeBox = false;
 
-            // Timer
-            timer1 = new Timer();
-            timer1.Interval = 1000;
-            timer1.Tick += Timer1_Tick;
+            // Taimer
+            taimer1 = new Timer();
+            taimer1.Interval = 1000;
+            taimer1.Tick += Taimer1_Tick;
 
-            // Main menu
-            ShowMainMenu();
+            // Peamenüü
+            NäitaPeaMenüüd();
 
-            // Menu
-            MainMenu menu = new MainMenu();
+            // Menüü
+            MainMenu menüü = new MainMenu();
 
-            MenuItem menuSettings = new MenuItem("Settings");
+            MenuItem menüüSeaded = new MenuItem("Seaded");
 
-            MenuItem menuDarkTheme =
-                new MenuItem("Dark Theme", DarkTheme);
+            MenuItem menüüTumeTeema =
+                new MenuItem("Tume teema", TumeTeema);
 
-            MenuItem menuBrightTheme =
-                new MenuItem("Bright Theme", BrightTheme);
+            MenuItem menüüHeleTeema =
+                new MenuItem("Hele teema", HeleTeema);
 
-            menuSettings.MenuItems.Add(menuDarkTheme);
-            menuSettings.MenuItems.Add(menuBrightTheme);
+            menüüSeaded.MenuItems.Add(menüüTumeTeema);
+            menüüSeaded.MenuItems.Add(menüüHeleTeema);
 
-            menu.MenuItems.Add(menuSettings);
+            menüü.MenuItems.Add(menüüSeaded);
 
-            Menu = menu;
+            Menu = menüü;
         }
 
-        // Main Menu
+        // Peamenüü
 
-        private void ShowMainMenu()
+        private void NäitaPeaMenüüd()
         {
             Controls.Clear();
 
-            title = new Label();
-            title.Text = "Math Quiz";
-            title.Font = new Font("Arial", 30, FontStyle.Bold);
-            title.AutoSize = true;
-            title.Location = new Point(215, 70);
-            Controls.Add(title);
+            pealkiri = new Label();
+            pealkiri.Text = "Matemaatikaviktoriin";
+            pealkiri.Font = new Font("Arial", 30, FontStyle.Bold);
+            pealkiri.AutoSize = true;
+            pealkiri.Location = new Point(95, 70);
+            Controls.Add(pealkiri);
 
-            startGameButton = new Button();
-            startGameButton.Text = "Start Game";
-            startGameButton.Font = new Font("Arial", 12, FontStyle.Bold);
-            startGameButton.Size = new Size(160, 50);
-            startGameButton.Location = new Point(220, 180);
-            startGameButton.Click += StartGameButton_Click;
-            Controls.Add(startGameButton);
+            alustaMänguNupp = new Button();
+            alustaMänguNupp.Text = "Alusta mängu";
+            alustaMänguNupp.Font = new Font("Arial", 12, FontStyle.Bold);
+            alustaMänguNupp.Size = new Size(160, 50);
+            alustaMänguNupp.Location = new Point(220, 180);
+            alustaMänguNupp.Click += AlustaMänguNupp_Click;
+            Controls.Add(alustaMänguNupp);
 
-            settingsButton = new Button();
-            settingsButton.Text = "Settings";
-            settingsButton.Font = new Font("Arial", 12, FontStyle.Bold);
-            settingsButton.Size = new Size(160, 50);
-            settingsButton.Location = new Point(220, 250);
-            settingsButton.Click += SettingsButton_Click;
-            Controls.Add(settingsButton);
+            seadeteNupp = new Button();
+            seadeteNupp.Text = "Seaded";
+            seadeteNupp.Font = new Font("Arial", 12, FontStyle.Bold);
+            seadeteNupp.Size = new Size(160, 50);
+            seadeteNupp.Location = new Point(220, 250);
+            seadeteNupp.Click += SeadeteNupp_Click;
+            Controls.Add(seadeteNupp);
 
-            ApplyTheme();
+            RakendaTeema();
         }
 
-        // Settings
+        // Seaded
 
-        private void ShowSettings()
+        private void NäitaSeadeid()
         {
             Controls.Clear();
 
-            title = new Label();
-            title.Text = "Settings";
-            title.Font = new Font("Arial", 28, FontStyle.Bold);
-            title.AutoSize = true;
-            title.Location = new Point(225, 30);
-            Controls.Add(title);
+            pealkiri = new Label();
+            pealkiri.Text = "Seaded";
+            pealkiri.Font = new Font("Arial", 28, FontStyle.Bold);
+            pealkiri.AutoSize = true;
+            pealkiri.Location = new Point(225, 30);
+            Controls.Add(pealkiri);
 
-            // Difficulty
-            difficultyLabel = new Label();
-            difficultyLabel.Text = "Difficulty";
-            difficultyLabel.Font = new Font("Arial", 14, FontStyle.Bold);
-            difficultyLabel.AutoSize = true;
-            difficultyLabel.Location = new Point(40, 90);
-            Controls.Add(difficultyLabel);
+            // Raskusaste
+            raskusLabel = new Label();
+            raskusLabel.Text = "Raskusaste";
+            raskusLabel.Font = new Font("Arial", 14, FontStyle.Bold);
+            raskusLabel.AutoSize = true;
+            raskusLabel.Location = new Point(40, 90);
+            Controls.Add(raskusLabel);
 
-            easyButton = new Button();
-            easyButton.Text = "Easy";
-            easyButton.Size = new Size(110, 40);
-            easyButton.Location = new Point(40, 130);
-            easyButton.Click += EasyButton_Click;
-            Controls.Add(easyButton);
+            lihtneNupp = new Button();
+            lihtneNupp.Text = "Lihtne";
+            lihtneNupp.Size = new Size(110, 40);
+            lihtneNupp.Location = new Point(40, 130);
+            lihtneNupp.Click += LihtneNupp_Click;
+            Controls.Add(lihtneNupp);
 
-            mediumButton = new Button();
-            mediumButton.Text = "Medium";
-            mediumButton.Size = new Size(110, 40);
-            mediumButton.Location = new Point(40, 180);
-            mediumButton.Click += MediumButton_Click;
-            Controls.Add(mediumButton);
+            keskmineNupp = new Button();
+            keskmineNupp.Text = "Keskmine";
+            keskmineNupp.Size = new Size(110, 40);
+            keskmineNupp.Location = new Point(40, 180);
+            keskmineNupp.Click += KeskmineNupp_Click;
+            Controls.Add(keskmineNupp);
 
-            hardButton = new Button();
-            hardButton.Text = "Hard";
-            hardButton.Size = new Size(110, 40);
-            hardButton.Location = new Point(40, 230);
-            hardButton.Click += HardButton_Click;
-            Controls.Add(hardButton);
+            raskeNupp = new Button();
+            raskeNupp.Text = "Raske";
+            raskeNupp.Size = new Size(110, 40);
+            raskeNupp.Location = new Point(40, 230);
+            raskeNupp.Click += RaskeNupp_Click;
+            Controls.Add(raskeNupp);
 
-            customButton = new Button();
-            customButton.Text = "Custom";
-            customButton.Size = new Size(110, 40);
-            customButton.Location = new Point(40, 280);
-            customButton.Click += CustomButton_Click;
-            Controls.Add(customButton);
+            kohandatudNupp = new Button();
+            kohandatudNupp.Text = "Kohandatud";
+            kohandatudNupp.Size = new Size(110, 40);
+            kohandatudNupp.Location = new Point(40, 280);
+            kohandatudNupp.Click += KohandatudNupp_Click;
+            Controls.Add(kohandatudNupp);
 
-            // Game Mode
-            gameModeLabel = new Label();
-            gameModeLabel.Text = "Game Mode";
-            gameModeLabel.Font = new Font("Arial", 14, FontStyle.Bold);
-            gameModeLabel.AutoSize = true;
-            gameModeLabel.Location = new Point(205, 90);
-            Controls.Add(gameModeLabel);
+            // Mänguviis
+            mänguRežiimLabel = new Label();
+            mänguRežiimLabel.Text = "Mänguviis";
+            mänguRežiimLabel.Font = new Font("Arial", 14, FontStyle.Bold);
+            mänguRežiimLabel.AutoSize = true;
+            mänguRežiimLabel.Location = new Point(205, 90);
+            Controls.Add(mänguRežiimLabel);
 
-            standardButton = new Button();
-            standardButton.Text = "Standard";
-            standardButton.Size = new Size(110, 40);
-            standardButton.Location = new Point(205, 130);
-            standardButton.Click += StandardButton_Click;
-            Controls.Add(standardButton);
+            standardneNupp = new Button();
+            standardneNupp.Text = "Standardne";
+            standardneNupp.Size = new Size(110, 40);
+            standardneNupp.Location = new Point(205, 130);
+            standardneNupp.Click += StandardneNupp_Click;
+            Controls.Add(standardneNupp);
 
-            continuousButton = new Button();
-            continuousButton.Text = "Continuous";
-            continuousButton.Size = new Size(110, 40);
-            continuousButton.Location = new Point(205, 180);
-            continuousButton.Click += ContinuousButton_Click;
-            Controls.Add(continuousButton);
+            pidevNupp = new Button();
+            pidevNupp.Text = "Pidev";
+            pidevNupp.Size = new Size(110, 40);
+            pidevNupp.Location = new Point(205, 180);
+            pidevNupp.Click += PidevNupp_Click;
+            Controls.Add(pidevNupp);
 
-            // Parameters
-            parametersLabel = new Label();
-            parametersLabel.Text = "Parameters";
-            parametersLabel.Font = new Font("Arial", 14, FontStyle.Bold);
-            parametersLabel.AutoSize = true;
-            parametersLabel.Location = new Point(365, 90);
-            Controls.Add(parametersLabel);
+            // Parameetrid
+            parameetridLabel = new Label();
+            parameetridLabel.Text = "Parameetrid";
+            parameetridLabel.Font = new Font("Arial", 14, FontStyle.Bold);
+            parameetridLabel.AutoSize = true;
+            parameetridLabel.Location = new Point(365, 90);
+            Controls.Add(parameetridLabel);
 
-            currentDifficultyLabel = new Label();
-            currentDifficultyLabel.AutoSize = true;
-            currentDifficultyLabel.Location = new Point(365, 135);
-            Controls.Add(currentDifficultyLabel);
+            praeguneRaskusLabel = new Label();
+            praeguneRaskusLabel.AutoSize = true;
+            praeguneRaskusLabel.Location = new Point(365, 135);
+            Controls.Add(praeguneRaskusLabel);
 
-            currentGamemodeLabel = new Label();
-            currentGamemodeLabel.AutoSize = true;
-            currentGamemodeLabel.Location = new Point(365, 165);
-            Controls.Add(currentGamemodeLabel);
+            praeguneRežiimLabel = new Label();
+            praeguneRežiimLabel.AutoSize = true;
+            praeguneRežiimLabel.Location = new Point(365, 165);
+            Controls.Add(praeguneRežiimLabel);
 
-            timeParameterLabel = new Label();
-            timeParameterLabel.AutoSize = true;
-            timeParameterLabel.Location = new Point(365, 195);
-            Controls.Add(timeParameterLabel);
+            aegParameeterLabel = new Label();
+            aegParameeterLabel.AutoSize = true;
+            aegParameeterLabel.Location = new Point(365, 195);
+            Controls.Add(aegParameeterLabel);
 
-            minimumParameterLabel = new Label();
-            minimumParameterLabel.AutoSize = true;
-            minimumParameterLabel.Location = new Point(365, 225);
-            Controls.Add(minimumParameterLabel);
+            minimaalneParameeterLabel = new Label();
+            minimaalneParameeterLabel.AutoSize = true;
+            minimaalneParameeterLabel.Location = new Point(365, 225);
+            Controls.Add(minimaalneParameeterLabel);
 
-            maximumParameterLabel = new Label();
-            maximumParameterLabel.AutoSize = true;
-            maximumParameterLabel.Location = new Point(365, 255);
-            Controls.Add(maximumParameterLabel);
+            maksimaalneParameeterLabel = new Label();
+            maksimaalneParameeterLabel.AutoSize = true;
+            maksimaalneParameeterLabel.Location = new Point(365, 255);
+            Controls.Add(maksimaalneParameeterLabel);
 
-            // Custom Time
-            customTime = new NumericUpDown();
-            customTime.Minimum = 10;
-            customTime.Maximum = 300;
-            customTime.Value = Math.Min(
-                Math.Max(gameTime, customTime.Minimum),
-                customTime.Maximum);
+            // Kohandatud aeg
+            kohandatudAeg = new NumericUpDown();
+            kohandatudAeg.Minimum = 10;
+            kohandatudAeg.Maximum = 300;
+            kohandatudAeg.Value = Math.Min(Math.Max(mänguAeg, kohandatudAeg.Minimum), kohandatudAeg.Maximum);
+            kohandatudAeg.Size = new Size(100, 30);
+            kohandatudAeg.Location = new Point(365, 285);
+            kohandatudAeg.Visible = false;
+            kohandatudAeg.ValueChanged += KohandatudAeg_ValueChanged;
+            Controls.Add(kohandatudAeg);
 
-            customTime.Size = new Size(100, 30);
-            customTime.Location = new Point(365, 285);
-            customTime.Visible = false;
-            customTime.ValueChanged += CustomTime_ValueChanged;
-            Controls.Add(customTime);
+            // Kohandatud maksimaalne arv
+            kohandatudArv = new NumericUpDown();
+            kohandatudArv.Minimum = 5;
+            kohandatudArv.Maximum = 1000;
+            kohandatudArv.Value = Math.Min(Math.Max(maksimaalneArv, kohandatudArv.Minimum), kohandatudArv.Maximum);
 
-            // Custom Maximum Number
-            customNumber = new NumericUpDown();
-            customNumber.Minimum = 5;
-            customNumber.Maximum = 1000;
-            customNumber.Value = Math.Min(
-                Math.Max(maximumNumber, customNumber.Minimum),
-                customNumber.Maximum);
+            kohandatudArv.Size = new Size(100, 30);
+            kohandatudArv.Location = new Point(365, 320);
+            kohandatudArv.Visible = false;
+            kohandatudArv.ValueChanged += KohandatudArv_ValueChanged;
+            Controls.Add(kohandatudArv);
 
-            customNumber.Size = new Size(100, 30);
-            customNumber.Location = new Point(365, 320);
-            customNumber.Visible = false;
-            customNumber.ValueChanged += CustomNumber_ValueChanged;
-            Controls.Add(customNumber);
+            // Tagasi
+            tagasiNupp = new Button();
+            tagasiNupp.Text = "Tagasi";
+            tagasiNupp.Size = new Size(100, 40);
+            tagasiNupp.Location = new Point(250, 370);
+            tagasiNupp.Click += TagasiNupp_Click;
+            Controls.Add(tagasiNupp);
 
-            // Back
-            backButton = new Button();
-            backButton.Text = "Back";
-            backButton.Size = new Size(100, 40);
-            backButton.Location = new Point(250, 370);
-            backButton.Click += BackButton_Click;
-            Controls.Add(backButton);
-
-            UpdateSettings();
-            ApplyTheme();
+            UuendaSeadeid();
+            RakendaTeema();
         }
 
-        // Settings Change
+        // Seadete muutmine
 
-        private void UpdateSettings()
+        private void UuendaSeadeid()
         {
-            if (currentDifficultyLabel == null)
+            if (praeguneRaskusLabel == null)
             {
                 return;
             }
 
-            currentDifficultyLabel.Text = "Difficulty: " + difficulty;
+            praeguneRaskusLabel.Text = "Raskusaste: " + raskus;
 
-            currentGamemodeLabel.Text = "Gamemode: " + gameMode;
+            praeguneRežiimLabel.Text = "Mänguviis: " + mänguRežiim;
 
-            timeParameterLabel.Text = "Time: " + gameTime + " sec";
+            aegParameeterLabel.Text = "Aeg: " + mänguAeg + " sek";
 
-            minimumParameterLabel.Text = "Minimum: " + minimumNumber;
+            minimaalneParameeterLabel.Text = "Minimaalne: " + minimaalneArv;
 
-            maximumParameterLabel.Text = "Maximum: " + maximumNumber;
+            maksimaalneParameeterLabel.Text = "Maksimaalne: " + maksimaalneArv;
 
-            if (difficulty == "Custom")
+            if (raskus == "Kohandatud")
             {
-                customTime.Visible = true;
-                customNumber.Visible = true;
+                kohandatudAeg.Visible = true;
+                kohandatudArv.Visible = true;
 
-                customTime.Value = Math.Min(Math.Max(gameTime, (int)customTime.Minimum), (int)customTime.Maximum);
+                kohandatudAeg.Value = Math.Min(Math.Max(mänguAeg, (int)kohandatudAeg.Minimum), (int)kohandatudAeg.Maximum);
 
-                customNumber.Value = Math.Min(Math.Max(maximumNumber, (int)customNumber.Minimum), (int)customNumber.Maximum);
+                kohandatudArv.Value = Math.Min(Math.Max(maksimaalneArv, (int)kohandatudArv.Minimum), (int)kohandatudArv.Maximum);
             }
             else
             {
-                customTime.Visible = false;
-                customNumber.Visible = false;
+                kohandatudAeg.Visible = false;
+                kohandatudArv.Visible = false;
             }
         }
 
-        // Custom Settings
+        // Kohandatud seaded
 
-        private void CustomTime_ValueChanged(object sender, EventArgs e)
+        private void KohandatudAeg_ValueChanged(object sender, EventArgs e)
         {
-            if (difficulty == "Custom")
+            if (raskus == "Kohandatud")
             {
-                gameTime = (int)customTime.Value;
-                UpdateSettings();
+                mänguAeg = (int)kohandatudAeg.Value;
+                UuendaSeadeid();
             }
         }
 
-        private void CustomNumber_ValueChanged(object sender, EventArgs e)
+        private void KohandatudArv_ValueChanged(object sender, EventArgs e)
         {
-            if (difficulty == "Custom")
+            if (raskus == "Kohandatud")
             {
-                maximumNumber = (int)customNumber.Value;
-                UpdateSettings();
+                maksimaalneArv = (int)kohandatudArv.Value;
+                UuendaSeadeid();
             }
         }
 
-        // Difficulty
+        // Raskusaste
 
-        private void SetEasy()
+        private void SeaLihtne()
         {
-            difficulty = "Easy";
-            gameTime = 60;
-            minimumNumber = 1;
-            maximumNumber = 10;
+            raskus = "Lihtne";
+            mänguAeg = 60;
+            minimaalneArv = 1;
+            maksimaalneArv = 10;
 
-            UpdateSettings();
+            UuendaSeadeid();
         }
 
-        private void SetMedium()
+        private void SeaKeskmine()
         {
-            difficulty = "Medium";
-            gameTime = 45;
-            minimumNumber = 1;
-            maximumNumber = 25;
+            raskus = "Keskmine";
+            mänguAeg = 45;
+            minimaalneArv = 1;
+            maksimaalneArv = 25;
 
-            UpdateSettings();
+            UuendaSeadeid();
         }
 
-        private void SetHard()
+        private void SeaRaske()
         {
-            difficulty = "Hard";
-            gameTime = 30;
-            minimumNumber = 1;
-            maximumNumber = 50;
+            raskus = "Raske";
+            mänguAeg = 30;
+            minimaalneArv = 1;
+            maksimaalneArv = 50;
 
-            UpdateSettings();
+            UuendaSeadeid();
         }
 
-        private void SetCustom()
+        private void SeaKohandatud()
         {
-            difficulty = "Custom";
+            raskus = "Kohandatud";
 
-            UpdateSettings();
+            UuendaSeadeid();
         }
 
-        // Game Mode
+        // Mänguviis
 
-        private void SetStandard()
+        private void SeaStandardne()
         {
-            gameMode = "Standard";
-            UpdateSettings();
+            mänguRežiim = "Standardne";
+            UuendaSeadeid();
         }
 
-        private void SetContinuous()
+        private void SeaPidev()
         {
-            gameMode = "Continuous";
-            UpdateSettings();
+            mänguRežiim = "Pidev";
+            UuendaSeadeid();
         }
 
-        // Buttons Click
+        // Nuppude klõpsud
 
-        private void StartGameButton_Click(object sender, EventArgs e)
+        private void AlustaMänguNupp_Click(object sender, EventArgs e)
         {
-            // Make sure custom values are saved.
-            if (difficulty == "Custom")
+            // Veendu, et kohandatud väärtused on salvestatud.
+            if (raskus == "Kohandatud")
             {
-                gameTime = (int)customTime.Value;
-                maximumNumber = (int)customNumber.Value;
+                mänguAeg = (int)kohandatudAeg.Value;
+                maksimaalneArv = (int)kohandatudArv.Value;
             }
 
-            completedQuestions = 0;
+            lahendatudKüsimused = 0;
 
-            ShowQuiz();
-            StartTheQuiz();
+            NäitaViktoriini();
+            AlustaViktoriini();
         }
 
-        private void MainMenuButton_Click(object sender, EventArgs e)
+        private void PeaMenüüNupp_Click(object sender, EventArgs e)
         {
-            timer1.Stop();
+            taimer1.Stop();
 
-            ShowMainMenu();
+            NäitaPeaMenüüd();
         }
 
-        private void SettingsButton_Click(object sender, EventArgs e)
+        private void SeadeteNupp_Click(object sender, EventArgs e)
         {
-            ShowSettings();
+            NäitaSeadeid();
         }
 
-        private void EasyButton_Click(object sender, EventArgs e)
+        private void LihtneNupp_Click(object sender, EventArgs e)
         {
-            SetEasy();
+            SeaLihtne();
         }
 
-        private void MediumButton_Click(object sender, EventArgs e)
+        private void KeskmineNupp_Click(object sender, EventArgs e)
         {
-            SetMedium();
+            SeaKeskmine();
         }
 
-        private void HardButton_Click(object sender, EventArgs e)
+        private void RaskeNupp_Click(object sender, EventArgs e)
         {
-            SetHard();
+            SeaRaske();
         }
 
-        private void CustomButton_Click(object sender,  EventArgs e)
+        private void KohandatudNupp_Click(object sender, EventArgs e)
         {
-            SetCustom();
+            SeaKohandatud();
         }
 
-        private void StandardButton_Click(object sender, EventArgs e)
+        private void StandardneNupp_Click(object sender, EventArgs e)
         {
-            SetStandard();
+            SeaStandardne();
         }
 
-        private void ContinuousButton_Click(object sender, EventArgs e)
+        private void PidevNupp_Click(object sender, EventArgs e)
         {
-            SetContinuous();
+            SeaPidev();
         }
 
-        private void BackButton_Click(object sender, EventArgs e)
+        private void TagasiNupp_Click(object sender, EventArgs e)
         {
-            ShowMainMenu();
+            NäitaPeaMenüüd();
         }
 
-        // Quiz
+        // Viktoriin
 
-        private void ShowQuiz()
+        private void NäitaViktoriini()
         {
             Controls.Clear();
 
-            // Time Left
-            timeLeftLabel = new Label();
-            timeLeftLabel.Text = "Time Left:";
-            timeLeftLabel.Font = new Font("Arial", 12, FontStyle.Bold);
-            timeLeftLabel.AutoSize = true;
-            timeLeftLabel.Location = new Point(ClientSize.Width - 180, 20);
-            Controls.Add(timeLeftLabel);
+            // Aega alles
+            aegAllLabel = new Label();
+            aegAllLabel.Text = "Aega alles:";
+            aegAllLabel.Font = new Font("Arial", 12, FontStyle.Bold);
+            aegAllLabel.AutoSize = true;
+            aegAllLabel.Location = new Point(ClientSize.Width - 180, 20);
+            Controls.Add(aegAllLabel);
 
-            // Timer
-            timeLabel = new Label();
-            timeLabel.Text = "";
-            timeLabel.Font = new Font("Arial", 12, FontStyle.Bold);
-            timeLabel.BorderStyle = BorderStyle.FixedSingle;
-            timeLabel.TextAlign = ContentAlignment.MiddleCenter;
-            timeLabel.Size = new Size(100, 30);
-            timeLabel.Location = new Point(ClientSize.Width - 110, 15);
-            Controls.Add(timeLabel);
+            // Taimer
+            aegLabel = new Label();
+            aegLabel.Text = "";
+            aegLabel.Font = new Font("Arial", 12, FontStyle.Bold);
+            aegLabel.BorderStyle = BorderStyle.FixedSingle;
+            aegLabel.TextAlign = ContentAlignment.MiddleCenter;
+            aegLabel.Size = new Size(100, 30);
+            aegLabel.Location = new Point(ClientSize.Width - 110, 15);
+            Controls.Add(aegLabel);
 
-            // Completed Questions
-            completedQuestionsLabel = new Label();
-            completedQuestionsLabel.Text = "Questions completed: " + completedQuestions;
-            completedQuestionsLabel.Font = new Font("Arial", 12, FontStyle.Bold);
-            completedQuestionsLabel.AutoSize = true;
-            completedQuestionsLabel.Location = new Point(80, 20);
-            Controls.Add(completedQuestionsLabel);
+            // Lahendatud küsimused
+            lahendatudKüsimusedLabel = new Label();
+            lahendatudKüsimusedLabel.Text = "Lahendatud küsimusi: " + lahendatudKüsimused;
+            lahendatudKüsimusedLabel.Font = new Font("Arial", 12, FontStyle.Bold);
+            lahendatudKüsimusedLabel.AutoSize = true;
+            lahendatudKüsimusedLabel.Location = new Point(80, 20);
+            Controls.Add(lahendatudKüsimusedLabel);
 
-            // Question 1
-            question1Label = CreateQuestionLabel(80);
-            Controls.Add(question1Label);
+            // Küsimus 1
+            küsimus1Label = LooKüsimuseLabel(80);
+            Controls.Add(küsimus1Label);
 
-            answer1 = CreateAnswerBox(85, 1);
-            Controls.Add(answer1);
+            vastus1 = LooVastuseKast(85, 1);
+            Controls.Add(vastus1);
 
-            // Question 2
-            question2Label = CreateQuestionLabel(140);
-            Controls.Add(question2Label);
+            // Küsimus 2
+            küsimus2Label = LooKüsimuseLabel(140);
+            Controls.Add(küsimus2Label);
 
-            answer2 = CreateAnswerBox(145, 2);
-            Controls.Add(answer2);
+            vastus2 = LooVastuseKast(145, 2);
+            Controls.Add(vastus2);
 
-            // Question 3
-            question3Label = CreateQuestionLabel(200);
-            Controls.Add(question3Label);
+            // Küsimus 3
+            küsimus3Label = LooKüsimuseLabel(200);
+            Controls.Add(küsimus3Label);
 
-            answer3 = CreateAnswerBox(205, 3);
-            Controls.Add(answer3);
+            vastus3 = LooVastuseKast(205, 3);
+            Controls.Add(vastus3);
 
-            // Question 4
-            question4Label = CreateQuestionLabel(260);
-            Controls.Add(question4Label);
+            // Küsimus 4
+            küsimus4Label = LooKüsimuseLabel(260);
+            Controls.Add(küsimus4Label);
 
-            answer4 = CreateAnswerBox(265, 4);
-            Controls.Add(answer4);
+            vastus4 = LooVastuseKast(265, 4);
+            Controls.Add(vastus4);
 
-            // Check Answers
-            checkAnswersButton = new Button();
-            checkAnswersButton.Text = "Check Answers";
-            checkAnswersButton.Font = new Font("Arial", 12, FontStyle.Bold);
-            checkAnswersButton.Size = new Size(180, 50);
-            checkAnswersButton.Location = new Point(210, 340);
-            checkAnswersButton.Click += CheckAnswersButton_Click;
-            Controls.Add(checkAnswersButton);
+            // Kontrolli vastuseid
+            kontrolliVastusedNupp = new Button();
+            kontrolliVastusedNupp.Text = "Kontrolli vastuseid";
+            kontrolliVastusedNupp.Font = new Font("Arial", 12, FontStyle.Bold);
+            kontrolliVastusedNupp.Size = new Size(180, 50);
+            kontrolliVastusedNupp.Location = new Point(210, 340);
+            kontrolliVastusedNupp.Click += KontrolliVastusedNupp_Click;
+            Controls.Add(kontrolliVastusedNupp);
 
-            // Main Menu
-            mainMenuButton = new Button();
-            mainMenuButton.Text = "Main Menu";
-            mainMenuButton.Font = new Font("Arial", 12, FontStyle.Bold);
-            mainMenuButton.Size = new Size(180, 40);
-            mainMenuButton.Location = new Point(210, 400);
-            mainMenuButton.Click += MainMenuButton_Click;
-            Controls.Add(mainMenuButton);
+            // Peamenüü
+            peaMenüüNupp = new Button();
+            peaMenüüNupp.Text = "Peamenüü";
+            peaMenüüNupp.Font = new Font("Arial", 12, FontStyle.Bold);
+            peaMenüüNupp.Size = new Size(180, 40);
+            peaMenüüNupp.Location = new Point(210, 400);
+            peaMenüüNupp.Click += PeaMenüüNupp_Click;
+            Controls.Add(peaMenüüNupp);
 
 
-            ApplyTheme();
+            RakendaTeema();
         }
 
-        private Label CreateQuestionLabel(int y)
+        private Label LooKüsimuseLabel(int y)
         {
             Label label = new Label();
 
@@ -562,382 +557,382 @@ namespace KolmRakendustWindowsFormSamrjakov
             return label;
         }
 
-        private NumericUpDown CreateAnswerBox(
+        private NumericUpDown LooVastuseKast(
             int y,
-            int tabIndex)
+            int tabIndeks)
         {
-            NumericUpDown box = new NumericUpDown();
+            NumericUpDown kast = new NumericUpDown();
 
-            box.Font = new Font("Arial", 18);
-            box.Size = new Size(100, 40);
-            box.Location = new Point(350, y);
-            box.TabIndex = tabIndex;
+            kast.Font = new Font("Arial", 18);
+            kast.Size = new Size(100, 40);
+            kast.Location = new Point(350, y);
+            kast.TabIndex = tabIndeks;
 
-            // Large enough for 1000 × 1000.
-            box.Maximum = 1000000;
+            // Piisavalt suur 1000 × 1000 jaoks.
+            kast.Maximum = 1000000;
 
-            box.Enter += Answer_Enter;
+            kast.Enter += Vastus_Enter;
 
-            return box;
+            return kast;
         }
 
-        // Quiz Start
+        // Viktoriini algus
 
-        private void StartTheQuiz()
+        private void AlustaViktoriini()
         {
-            answer1.Value = 0;
-            answer2.Value = 0;
-            answer3.Value = 0;
-            answer4.Value = 0;
+            vastus1.Value = 0;
+            vastus2.Value = 0;
+            vastus3.Value = 0;
+            vastus4.Value = 0;
 
-            CreateQuestion(question1Label, 1);
-            CreateQuestion(question2Label, 2);
-            CreateQuestion(question3Label, 3);
-            CreateQuestion(question4Label, 4);
+            LooKüsimus(küsimus1Label, 1);
+            LooKüsimus(küsimus2Label, 2);
+            LooKüsimus(küsimus3Label, 3);
+            LooKüsimus(küsimus4Label, 4);
 
-            checkAnswersButton.Enabled = true;
+            kontrolliVastusedNupp.Enabled = true;
 
-            // Only starts / resets the timer when a new game begins.
-            // In Continuous mode, the timer does NOT reset when a new set of questions is generated.
-            if (!timer1.Enabled)
+            // Käivitab / lähtestab taimeri ainult uue mängu alguses.
+            // Pideval režiimil taimerit EI lähtestata, kui genereeritakse uus küsimuste komplekt.
+            if (!taimer1.Enabled)
             {
-                timeLeft = gameTime;
+                aegAllesJäänud = mänguAeg;
 
-                timeLabel.Text = timeLeft + " sec";
+                aegLabel.Text = aegAllesJäänud + " sek";
 
-                timeLabel.BackColor = Backcolor;
+                aegLabel.BackColor = Taustavärv;
 
-                timeLabel.ForeColor = Frontcolor;
+                aegLabel.ForeColor = Esiplaanivärv;
 
-                timer1.Start();
+                taimer1.Start();
             }
         }
 
 
-        // Random Question
+        // Juhuslik küsimus
 
-        private void CreateQuestion(Label questionLabel, int questionNumber)
+        private void LooKüsimus(Label küsimuseLabel, int küsimuseNumber)
         {
-            int questionType = randomizer.Next(1, 5);
+            int küsimuseTüüp = juhuslik.Next(1, 5);
 
-            int number1;
-            int number2;
-            int answer;
+            int arv1;
+            int arv2;
+            int vastus;
 
-            // Addition
-            if (questionType == 1)
+            // Liitmine
+            if (küsimuseTüüp == 1)
             {
-                number1 = randomizer.Next(minimumNumber, maximumNumber + 1);
+                arv1 = juhuslik.Next(minimaalneArv, maksimaalneArv + 1);
 
-                number2 = randomizer.Next( minimumNumber, maximumNumber + 1);
+                arv2 = juhuslik.Next(minimaalneArv, maksimaalneArv + 1);
 
-                answer = number1 + number2;
+                vastus = arv1 + arv2;
 
-                questionLabel.Text = number1 + " + " + number2 + " =";
+                küsimuseLabel.Text = arv1 + " + " + arv2 + " =";
 
-                SetQuestionAnswer(questionNumber, answer);
+                SeaKüsimuseVastus(küsimuseNumber, vastus);
             }
 
-            // Subtraction
-            else if (questionType == 2)
+            // Lahutamine
+            else if (küsimuseTüüp == 2)
             {
-                number1 = randomizer.Next(minimumNumber, maximumNumber + 1);
+                arv1 = juhuslik.Next(minimaalneArv, maksimaalneArv + 1);
 
-                number2 = randomizer.Next(minimumNumber, number1 + 1);
+                arv2 = juhuslik.Next(minimaalneArv, arv1 + 1);
 
-                answer = number1 - number2;
+                vastus = arv1 - arv2;
 
-                questionLabel.Text = number1 + " - " + number2 + " =";
+                küsimuseLabel.Text = arv1 + " - " + arv2 + " =";
 
-                SetQuestionAnswer(questionNumber, answer);
+                SeaKüsimuseVastus(küsimuseNumber, vastus);
             }
 
-            // Multiplication
-            else if (questionType == 3)
+            // Korrutamine
+            else if (küsimuseTüüp == 3)
             {
-                number1 = randomizer.Next(minimumNumber, maximumNumber + 1);
+                arv1 = juhuslik.Next(minimaalneArv, maksimaalneArv + 1);
 
-                number2 = randomizer.Next(minimumNumber, maximumNumber + 1);
+                arv2 = juhuslik.Next(minimaalneArv, maksimaalneArv + 1);
 
-                answer = number1 * number2;
+                vastus = arv1 * arv2;
 
-                questionLabel.Text = number1 + " × " + number2 + " =";
+                küsimuseLabel.Text = arv1 + " × " + arv2 + " =";
 
-                SetQuestionAnswer(questionNumber, answer);
+                SeaKüsimuseVastus(küsimuseNumber, vastus);
             }
 
-            // Division
+            // Jagamine
             else
             {
-                number2 = randomizer.Next(minimumNumber, maximumNumber + 1);
+                arv2 = juhuslik.Next(minimaalneArv, maksimaalneArv + 1);
 
-                int temporaryAnswer = randomizer.Next(minimumNumber, maximumNumber + 1);
+                int ajutineVastus = juhuslik.Next(minimaalneArv, maksimaalneArv + 1);
 
-                number1 = number2 * temporaryAnswer;
+                arv1 = arv2 * ajutineVastus;
 
-                answer = number1 / number2;
+                vastus = arv1 / arv2;
 
-                questionLabel.Text = number1 + " ÷ " + number2 + " =";
+                küsimuseLabel.Text = arv1 + " ÷ " + arv2 + " =";
 
-                SetQuestionAnswer(questionNumber, answer);
+                SeaKüsimuseVastus(küsimuseNumber, vastus);
             }
         }
 
-        // Answers
+        // Vastused
 
-        private void SetQuestionAnswer(int questionNumber, int answer)
+        private void SeaKüsimuseVastus(int küsimuseNumber, int vastus)
         {
-            if (questionNumber == 1)
+            if (küsimuseNumber == 1)
             {
-                question1Answer = answer;
+                küsimus1Vastus = vastus;
             }
-            else if (questionNumber == 2)
+            else if (küsimuseNumber == 2)
             {
-                question2Answer = answer;
+                küsimus2Vastus = vastus;
             }
-            else if (questionNumber == 3)
+            else if (küsimuseNumber == 3)
             {
-                question3Answer = answer;
+                küsimus3Vastus = vastus;
             }
-            else if (questionNumber == 4)
+            else if (küsimuseNumber == 4)
             {
-                question4Answer = answer;
+                küsimus4Vastus = vastus;
             }
         }
 
-        // Check Answers Button
+        // Kontrolli vastuseid nupp
 
-        private void CheckAnswersButton_Click(object sender, EventArgs e)
+        private void KontrolliVastusedNupp_Click(object sender, EventArgs e)
         {
-            if (!timer1.Enabled)
+            if (!taimer1.Enabled)
             {
                 return;
             }
 
-            bool correct = true;
+            bool õige = true;
 
-            if (answer1.Value != question1Answer)
+            if (vastus1.Value != küsimus1Vastus)
             {
-                correct = false;
+                õige = false;
             }
 
-            if (answer2.Value != question2Answer)
+            if (vastus2.Value != küsimus2Vastus)
             {
-                correct = false;
-            }      
-
-            if (answer3.Value != question3Answer)
-            {
-                correct = false;
+                õige = false;
             }
 
-            if (answer4.Value != question4Answer)
+            if (vastus3.Value != küsimus3Vastus)
             {
-                correct = false;
+                õige = false;
             }
 
-            if (correct)
+            if (vastus4.Value != küsimus4Vastus)
             {
-                if (gameMode == "Continuous")
+                õige = false;
+            }
+
+            if (õige)
+            {
+                if (mänguRežiim == "Pidev")
                 {
-                    completedQuestions += 4;
+                    lahendatudKüsimused += 4;
 
-                    completedQuestionsLabel.Text = "Questions completed: " + completedQuestions;
+                    lahendatudKüsimusedLabel.Text = "Lahendatud küsimusi: " + lahendatudKüsimused;
 
-                    // Generate the next four questions
-                    // and reset the timer.
-                    StartTheQuiz();
+                    // Genereeri järgmised neli küsimust
+                    // ja lähtesta taimer.
+                    AlustaViktoriini();
 
                     return;
                 }
 
-                timer1.Stop();
+                taimer1.Stop();
 
-                MessageBox.Show("All answers are correct!", "Math Quiz");
+                MessageBox.Show("Kõik vastused on õiged!", "Matemaatikaviktoriin");
 
-                checkAnswersButton.Enabled = false;
+                kontrolliVastusedNupp.Enabled = false;
 
                 return;
             }
 
-            MessageBox.Show("Some answers are incorrect.", "Math Quiz");
+            MessageBox.Show("Mõned vastused on valed.", "Matemaatikaviktoriin");
         }
 
-        // Timer
+        // Taimer
 
-        private void Timer1_Tick(object sender, EventArgs e)
+        private void Taimer1_Tick(object sender, EventArgs e)
         {
-            if (timeLeft > 0)
+            if (aegAllesJäänud > 0)
             {
-                timeLeft--;
+                aegAllesJäänud--;
 
-                timeLabel.Text = timeLeft + " sec";
+                aegLabel.Text = aegAllesJäänud + " sek";
 
-                if (timeLeft <= 5)
+                if (aegAllesJäänud <= 5)
                 {
-                    timeLabel.BackColor = Color.Red;
+                    aegLabel.BackColor = Color.Red;
 
-                    timeLabel.ForeColor = Color.White;
+                    aegLabel.ForeColor = Color.White;
                 }
             }
             else
             {
-                timer1.Stop();
+                taimer1.Stop();
 
-                timeLabel.Text = "Time's up!";
+                aegLabel.Text = "Aeg sai läbi!";
 
-                timeLabel.BackColor = Color.Red;
+                aegLabel.BackColor = Color.Red;
 
-                timeLabel.ForeColor = Color.White;
+                aegLabel.ForeColor = Color.White;
 
-                checkAnswersButton.Enabled = false;
+                kontrolliVastusedNupp.Enabled = false;
 
-                if (gameMode == "Continuous")
+                if (mänguRežiim == "Pidev")
                 {
-                    MessageBox.Show("Time is up!\nQuestions completed: " + completedQuestions, "Math Quiz");
+                    MessageBox.Show("Aeg sai läbi!\nLahendatud küsimusi: " + lahendatudKüsimused, "Matemaatikaviktoriin");
                 }
                 else
                 {
-                    MessageBox.Show("Time is up!", "Math Quiz");
+                    MessageBox.Show("Aeg sai läbi!", "Matemaatikaviktoriin");
                 }
             }
         }
 
-        // Answer Box
+        // Vastuse kast
 
-        private void Answer_Enter(object sender, EventArgs e)
+        private void Vastus_Enter(object sender, EventArgs e)
         {
-            NumericUpDown answerBox = sender as NumericUpDown;
+            NumericUpDown vastuseKast = sender as NumericUpDown;
 
-            if (answerBox != null)
+            if (vastuseKast != null)
             {
-                int lengthOfAnswer = answerBox.Value.ToString().Length;
+                int vastusePikkusTähtedes = vastuseKast.Value.ToString().Length;
 
-                answerBox.Select(0, lengthOfAnswer);
+                vastuseKast.Select(0, vastusePikkusTähtedes);
             }
         }
 
-        // Dark Theme
+        // Tume teema
 
-        private void DarkTheme(object sender, EventArgs e)
+        private void TumeTeema(object sender, EventArgs e)
         {
-            Backcolor = Color.Black;
-            Frontcolor = Color.White;
+            Taustavärv = Color.Black;
+            Esiplaanivärv = Color.White;
 
-            ApplyTheme();
+            RakendaTeema();
         }
 
-        // Bright Theme
+        // Hele teema
 
-        private void BrightTheme(
+        private void HeleTeema(
             object sender,
             EventArgs e)
         {
-            Backcolor = Color.White;
-            Frontcolor = Color.Black;
+            Taustavärv = Color.White;
+            Esiplaanivärv = Color.Black;
 
-            ApplyTheme();
+            RakendaTeema();
         }
 
-        // Apply Theme
+        // Rakenda teema
 
-        private void ApplyTheme()
+        private void RakendaTeema()
         {
-            BackColor = Backcolor;
-            ForeColor = Frontcolor;
+            BackColor = Taustavärv;
+            ForeColor = Esiplaanivärv;
 
-            ApplyLabelTheme(title);
+            RakendaLabeliTeema(pealkiri);
 
-            ApplyButtonTheme(startGameButton);
-            ApplyButtonTheme(settingsButton);
+            RakendaNupuTeema(alustaMänguNupp);
+            RakendaNupuTeema(seadeteNupp);
 
-            ApplyLabelTheme(difficultyLabel);
-            ApplyLabelTheme(gameModeLabel);
-            ApplyLabelTheme(parametersLabel);
+            RakendaLabeliTeema(raskusLabel);
+            RakendaLabeliTeema(mänguRežiimLabel);
+            RakendaLabeliTeema(parameetridLabel);
 
-            ApplyLabelTheme(currentDifficultyLabel);
-            ApplyLabelTheme(currentGamemodeLabel);
-            ApplyLabelTheme(timeParameterLabel);
-            ApplyLabelTheme(minimumParameterLabel);
-            ApplyLabelTheme(maximumParameterLabel);
+            RakendaLabeliTeema(praeguneRaskusLabel);
+            RakendaLabeliTeema(praeguneRežiimLabel);
+            RakendaLabeliTeema(aegParameeterLabel);
+            RakendaLabeliTeema(minimaalneParameeterLabel);
+            RakendaLabeliTeema(maksimaalneParameeterLabel);
 
-            ApplyButtonTheme(easyButton);
-            ApplyButtonTheme(mediumButton);
-            ApplyButtonTheme(hardButton);
-            ApplyButtonTheme(customButton);
+            RakendaNupuTeema(lihtneNupp);
+            RakendaNupuTeema(keskmineNupp);
+            RakendaNupuTeema(raskeNupp);
+            RakendaNupuTeema(kohandatudNupp);
 
-            ApplyButtonTheme(standardButton);
-            ApplyButtonTheme(continuousButton);
-            ApplyButtonTheme(backButton);
+            RakendaNupuTeema(standardneNupp);
+            RakendaNupuTeema(pidevNupp);
+            RakendaNupuTeema(tagasiNupp);
 
-            ApplyNumericTheme(customTime);
-            ApplyNumericTheme(customNumber);
+            RakendaNumbriTeema(kohandatudAeg);
+            RakendaNumbriTeema(kohandatudArv);
 
-            ApplyLabelTheme(timeLeftLabel);
-            ApplyLabelTheme(completedQuestionsLabel);
+            RakendaLabeliTeema(aegAllLabel);
+            RakendaLabeliTeema(lahendatudKüsimusedLabel);
 
-            ApplyLabelTheme(question1Label);
-            ApplyLabelTheme(question2Label);
-            ApplyLabelTheme(question3Label);
-            ApplyLabelTheme(question4Label);
+            RakendaLabeliTeema(küsimus1Label);
+            RakendaLabeliTeema(küsimus2Label);
+            RakendaLabeliTeema(küsimus3Label);
+            RakendaLabeliTeema(küsimus4Label);
 
-            ApplyNumericTheme(answer1);
-            ApplyNumericTheme(answer2);
-            ApplyNumericTheme(answer3);
-            ApplyNumericTheme(answer4);
+            RakendaNumbriTeema(vastus1);
+            RakendaNumbriTeema(vastus2);
+            RakendaNumbriTeema(vastus3);
+            RakendaNumbriTeema(vastus4);
 
-            ApplyButtonTheme(checkAnswersButton);
-            ApplyButtonTheme(mainMenuButton);
+            RakendaNupuTeema(kontrolliVastusedNupp);
+            RakendaNupuTeema(peaMenüüNupp);
 
 
-            if (timeLabel != null)
+            if (aegLabel != null)
             {
-                // Preserve red timer when five seconds or less remain.
-                if (timeLeft <= 5 && timer1.Enabled)
+                // Säilita punane taimer, kui jäänud on viis sekundit või vähem.
+                if (aegAllesJäänud <= 5 && taimer1.Enabled)
                 {
-                    timeLabel.BackColor = Color.Red;
-                    timeLabel.ForeColor = Color.White;
+                    aegLabel.BackColor = Color.Red;
+                    aegLabel.ForeColor = Color.White;
                 }
-                else if (timeLabel.Text == "Time's up!")
+                else if (aegLabel.Text == "Aeg sai läbi!")
                 {
-                    timeLabel.BackColor = Color.Red;
-                    timeLabel.ForeColor = Color.White;
+                    aegLabel.BackColor = Color.Red;
+                    aegLabel.ForeColor = Color.White;
                 }
                 else
                 {
-                    timeLabel.BackColor = Backcolor;
-                    timeLabel.ForeColor = Frontcolor;
+                    aegLabel.BackColor = Taustavärv;
+                    aegLabel.ForeColor = Esiplaanivärv;
                 }
             }
         }
 
-        // Theme Methods
+        // Teema meetodid
 
-        private void ApplyLabelTheme(Label label)
+        private void RakendaLabeliTeema(Label label)
         {
             if (label != null)
             {
-                label.ForeColor = Frontcolor;
-                label.BackColor = Backcolor;
+                label.ForeColor = Esiplaanivärv;
+                label.BackColor = Taustavärv;
             }
         }
 
-        private void ApplyButtonTheme(Button button)
+        private void RakendaNupuTeema(Button nupp)
         {
-            if (button != null)
+            if (nupp != null)
             {
-                button.BackColor = Backcolor;
-                button.ForeColor = Frontcolor;
+                nupp.BackColor = Taustavärv;
+                nupp.ForeColor = Esiplaanivärv;
             }
         }
 
-        private void ApplyNumericTheme(
-            NumericUpDown numeric)
+        private void RakendaNumbriTeema(
+            NumericUpDown number)
         {
-            if (numeric != null)
+            if (number != null)
             {
-                numeric.BackColor = Backcolor;
-                numeric.ForeColor = Frontcolor;
+                number.BackColor = Taustavärv;
+                number.ForeColor = Esiplaanivärv;
             }
         }
     }

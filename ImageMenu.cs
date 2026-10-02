@@ -5,66 +5,66 @@ using System.Windows.Forms;
 
 namespace KolmRakendustWindowsFormSamrjakov
 {
-    public partial class ImageMenu : Form
+    public partial class PildiMenüü : Form
     {
-        PictureBox pictureBox;
-        FlowLayoutPanel imagePanel;
+        PictureBox pildiKast;
+        FlowLayoutPanel pildiPaneel;
 
-        public ImageMenu(PictureBox mainPictureBox)
+        public PildiMenüü(PictureBox peamineKast)
         {
-            Text = "Images";
+            Text = "Pildid";
             Size = new Size(600, 400);
             StartPosition = FormStartPosition.CenterScreen;
 
-            pictureBox = mainPictureBox;
+            pildiKast = peamineKast;
 
-            // Image Panel
-            imagePanel = new FlowLayoutPanel();
-            imagePanel.Dock = DockStyle.Fill;
-            imagePanel.AutoScroll = true;
+            // Pildipaneel
+            pildiPaneel = new FlowLayoutPanel();
+            pildiPaneel.Dock = DockStyle.Fill;
+            pildiPaneel.AutoScroll = true;
 
-            Controls.Add(imagePanel);
+            Controls.Add(pildiPaneel);
 
-            // Images folder
-            string imageFolder = Path.GetFullPath(@"..\..\Images");
+            // Piltide kaust
+            string pildiKaust = Path.GetFullPath(@"..\..\Images");
 
-            if (Directory.Exists(imageFolder))
+            if (Directory.Exists(pildiKaust))
             {
-                string[] images = Directory.GetFiles(imageFolder, "*.*");
+                string[] pildid = Directory.GetFiles(pildiKaust, "*.*");
 
-                foreach (string image in images)
+                foreach (string pilt in pildid)
                 {
-                    if (image.EndsWith(".jpg") ||
-                        image.EndsWith(".jpeg") ||
-                        image.EndsWith(".png") ||
-                        image.EndsWith(".bmp") ||
-                        image.EndsWith(".gif"))
+                    if (pilt.EndsWith(".jpg") ||
+                        pilt.EndsWith(".jpeg") ||
+                        pilt.EndsWith(".png") ||
+                        pilt.EndsWith(".bmp") ||
+                        pilt.EndsWith(".gif"))
                     {
-                        PictureBox imageBox = new PictureBox();
+                        PictureBox pildiKastike = new PictureBox();
 
-                        imageBox.Size = new Size(120, 100);
-                        imageBox.SizeMode = PictureBoxSizeMode.Zoom;
-                        imageBox.BorderStyle = BorderStyle.FixedSingle;
-                        imageBox.Cursor = Cursors.Hand;
+                        pildiKastike.Size = new Size(120, 100);
+                        pildiKastike.SizeMode = PictureBoxSizeMode.Zoom;
+                        pildiKastike.BorderStyle = BorderStyle.FixedSingle;
+                        pildiKastike.Cursor = Cursors.Hand;
 
-                        imageBox.Image = Image.FromFile(image);
-                        imageBox.Tag = image;
+                        pildiKastike.Image = Image.FromFile(pilt);
+                        pildiKastike.Tag = pilt;
 
-                        imageBox.Click += ImageBox_Click;
+                        pildiKastike.Click += PildiKastike_Click;
 
-                        imagePanel.Controls.Add(imageBox);
+                        pildiPaneel.Controls.Add(pildiKastike);
                     }
                 }
             }
         }
 
-        private void ImageBox_Click(object sender, EventArgs e)
+        private void PildiKastike_Click(object sender, EventArgs e)
         {
-            PictureBox imageBox = (PictureBox)sender;
+            PictureBox pildiKastike = (PictureBox)sender;
 
-            string imagePath = (string)imageBox.Tag;
+            string pildiTee = (string)pildiKastike.Tag;
 
-            pictureBox.Load(imagePath);
+            pildiKast.Load(pildiTee);
 
             Close();
         }

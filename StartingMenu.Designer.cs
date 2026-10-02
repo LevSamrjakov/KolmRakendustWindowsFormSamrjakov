@@ -1,6 +1,6 @@
 ﻿namespace KolmRakendustWindowsFormSamrjakov
 {
-    partial class StartingMenu
+    partial class AlgusMenüü
     {
         /// <summary>
         /// Required designer variable.

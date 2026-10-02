@@ -1,6 +1,6 @@
 ﻿namespace KolmRakendustWindowsFormSamrjakov
 {
-    partial class ImageMenu
+    partial class PildiMenüü
     {
         /// <summary>
         /// Required designer variable.

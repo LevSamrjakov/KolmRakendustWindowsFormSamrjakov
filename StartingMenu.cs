@@ -4,153 +4,153 @@ using System.Windows.Forms;
 
 namespace KolmRakendustWindowsFormSamrjakov
 {
-    public partial class StartingMenu : Form
+    public partial class AlgusMenüü : Form
     {
-        Button button1, button2, button3, button4;
-        Label title;
-        Color Backcolor, Frontcolor;
+        Button nupp1, nupp2, nupp3, nupp4;
+        Label pealkiri;
+        Color Taustavärv, Esiplaanivärv;
 
-        public StartingMenu()
+        public AlgusMenüü()
         {
-            // Window Size
+            // Akna suurus
             Height = 600;
             Width = 600;
 
-            // Window Starting Position
+            // Akna algpositsioon
             StartPosition = FormStartPosition.CenterScreen;
 
-            // Window Text / Name
-            Text = "Main Menu";
+            // Akna tekst / nimi
+            Text = "Peamenüü";
 
-            // Window Theme / Colors
-            Backcolor = BackColor = Color.White;
-            Frontcolor = ForeColor = Color.Black;
+            // Akna teema / värvid
+            Taustavärv = BackColor = Color.White;
+            Esiplaanivärv = ForeColor = Color.Black;
 
-            // Title
-            title = new Label();
-            title.Text = "Main Menu";
-            title.Location = new Point(150, 75);
-            title.Size = new Size(300, 70);
-            title.Font = new Font("Arial", 30, FontStyle.Bold);
-            title.TextAlign = ContentAlignment.MiddleCenter;
-            title.AutoSize = false;
-            Controls.Add(title);
+            // Pealkiri
+            pealkiri = new Label();
+            pealkiri.Text = "Peamenüü";
+            pealkiri.Location = new Point(150, 75);
+            pealkiri.Size = new Size(300, 70);
+            pealkiri.Font = new Font("Arial", 30, FontStyle.Bold);
+            pealkiri.TextAlign = ContentAlignment.MiddleCenter;
+            pealkiri.AutoSize = false;
+            Controls.Add(pealkiri);
 
-            // 1. Button: Image Viewer
-            button1 = new Button();
-            button1.Text = "Image Viewer";
-            button1.Font = new Font("Arial", 10, FontStyle.Bold);
-            button1.Location = new Point(200, 200);
-            button1.Height = 50;
-            button1.Width = 200;
-            button1.Click += OpenImageViewer;
-            Controls.Add(button1);
+            // 1. Nupp: Pildivaataja
+            nupp1 = new Button();
+            nupp1.Text = "Pildivaataja";
+            nupp1.Font = new Font("Arial", 10, FontStyle.Bold);
+            nupp1.Location = new Point(200, 200);
+            nupp1.Height = 50;
+            nupp1.Width = 200;
+            nupp1.Click += AvaPildiVaataja;
+            Controls.Add(nupp1);
 
-            // 2. Button: Math Quiz
-            button2 = new Button();
-            button2.Text = "Math Quiz";
-            button2.Font = new Font("Arial", 10, FontStyle.Bold);
-            button2.Location = new Point(200, 275);
-            button2.Height = 50;
-            button2.Width = 200;
-            button2.Click += OpenMathQuiz;
-            Controls.Add(button2);
+            // 2. Nupp: Matemaatikaviktoriin
+            nupp2 = new Button();
+            nupp2.Text = "Matemaatikaviktoriin";
+            nupp2.Font = new Font("Arial", 10, FontStyle.Bold);
+            nupp2.Location = new Point(200, 275);
+            nupp2.Height = 50;
+            nupp2.Width = 200;
+            nupp2.Click += AvaMatemaatikaviktoriin;
+            Controls.Add(nupp2);
 
-            // 3. Button: Image Pairs Game
-            button3 = new Button();
-            button3.Text = "Image Pairs Game";
-            button3.Font = new Font("Arial", 10, FontStyle.Bold);
-            button3.Location = new Point(200, 350);
-            button3.Height = 50;
-            button3.Width = 200;
-            button3.Click += OpenImageMatchGame;
-            Controls.Add(button3);
+            // 3. Nupp: Piltide paaride mäng
+            nupp3 = new Button();
+            nupp3.Text = "Piltide paaride mäng";
+            nupp3.Font = new Font("Arial", 10, FontStyle.Bold);
+            nupp3.Location = new Point(200, 350);
+            nupp3.Height = 50;
+            nupp3.Width = 200;
+            nupp3.Click += AvaPiltidePaarideMäng;
+            Controls.Add(nupp3);
 
-            // 4. Button: Exit
-            button4 = new Button();
-            button4.Text = "Exit";
-            button4.Font = new Font("Arial", 10, FontStyle.Bold);
-            button4.Location = new Point(200, 425);
-            button4.Height = 50;
-            button4.Width = 200;
-            button4.Click += ExitApplication;
-            Controls.Add(button4);
+            // 4. Nupp: Välju
+            nupp4 = new Button();
+            nupp4.Text = "Välju";
+            nupp4.Font = new Font("Arial", 10, FontStyle.Bold);
+            nupp4.Location = new Point(200, 425);
+            nupp4.Height = 50;
+            nupp4.Width = 200;
+            nupp4.Click += VäljuRakendusest;
+            Controls.Add(nupp4);
 
-            // Settings
-            System.Windows.Forms.MainMenu menu = new System.Windows.Forms.MainMenu();
+            // Seaded
+            System.Windows.Forms.MainMenu menüü = new System.Windows.Forms.MainMenu();
 
-            MenuItem menuSettings = new MenuItem("Settings");
+            MenuItem menüüSeaded = new MenuItem("Seaded");
 
-            MenuItem menuDarkTheme = new MenuItem("Dark Theme", new EventHandler(DarkTheme));
-            menuSettings.MenuItems.Add(menuDarkTheme);
+            MenuItem menüüTumeTeema = new MenuItem("Tume teema", new EventHandler(TumeTeema));
+            menüüSeaded.MenuItems.Add(menüüTumeTeema);
 
-            MenuItem menuBrightTheme = new MenuItem("Bright Theme", new EventHandler(BrightTheme));
-            menuSettings.MenuItems.Add(menuBrightTheme);
+            MenuItem menüüHeleTeema = new MenuItem("Hele teema", new EventHandler(HeleTeema));
+            menüüSeaded.MenuItems.Add(menüüHeleTeema);
 
-            menu.MenuItems.Add(menuSettings);
+            menüü.MenuItems.Add(menüüSeaded);
 
-            Menu = menu;
+            Menu = menüü;
         }
 
-        private void DarkTheme(object sender, EventArgs e)
+        private void TumeTeema(object sender, EventArgs e)
         {
-            Backcolor = BackColor = Color.Black;
-            Frontcolor = ForeColor = Color.White;
+            Taustavärv = BackColor = Color.Black;
+            Esiplaanivärv = ForeColor = Color.White;
 
-            title.ForeColor = Color.White;
+            pealkiri.ForeColor = Color.White;
 
-            button1.BackColor = Color.Black;
-            button1.ForeColor = Color.White;
+            nupp1.BackColor = Color.Black;
+            nupp1.ForeColor = Color.White;
 
-            button2.BackColor = Color.Black;
-            button2.ForeColor = Color.White;
+            nupp2.BackColor = Color.Black;
+            nupp2.ForeColor = Color.White;
 
-            button3.BackColor = Color.Black;
-            button3.ForeColor = Color.White;
+            nupp3.BackColor = Color.Black;
+            nupp3.ForeColor = Color.White;
 
-            button4.BackColor = Color.Black;
-            button4.ForeColor = Color.White;
+            nupp4.BackColor = Color.Black;
+            nupp4.ForeColor = Color.White;
         }
 
-        private void BrightTheme(object sender, EventArgs e)
+        private void HeleTeema(object sender, EventArgs e)
         {
-            Backcolor = BackColor = Color.White;
-            Frontcolor = ForeColor = Color.Black;
+            Taustavärv = BackColor = Color.White;
+            Esiplaanivärv = ForeColor = Color.Black;
 
-            title.ForeColor = Color.Black;
+            pealkiri.ForeColor = Color.Black;
 
-            button1.BackColor = Color.White;
-            button1.ForeColor = Color.Black;
+            nupp1.BackColor = Color.White;
+            nupp1.ForeColor = Color.Black;
 
-            button2.BackColor = Color.White;
-            button2.ForeColor = Color.Black;
+            nupp2.BackColor = Color.White;
+            nupp2.ForeColor = Color.Black;
 
-            button3.BackColor = Color.White;
-            button3.ForeColor = Color.Black;
+            nupp3.BackColor = Color.White;
+            nupp3.ForeColor = Color.Black;
 
-            button4.BackColor = Color.White;
-            button4.ForeColor = Color.Black;
+            nupp4.BackColor = Color.White;
+            nupp4.ForeColor = Color.Black;
         }
 
-        private void OpenImageViewer(object sender, EventArgs e)
+        private void AvaPildiVaataja(object sender, EventArgs e)
         {
-            ImageViewer imageViewer = new ImageViewer("Image Viewer", 1000, 600, Backcolor, Frontcolor);
-            imageViewer.Show();
+            PildiVaataja pildiVaataja = new PildiVaataja("Pildivaataja", 1000, 600, Taustavärv, Esiplaanivärv);
+            pildiVaataja.Show();
         }
 
-        private void OpenMathQuiz(object sender, EventArgs e)
+        private void AvaMatemaatikaviktoriin(object sender, EventArgs e)
         {
-            MathQuiz mathQuiz = new MathQuiz("Math Quiz", 600, 600, Backcolor, Frontcolor);
-            mathQuiz.Show();
+            Matemaatikaviktoriin matemaatikaviktoriin = new Matemaatikaviktoriin("Matemaatikaviktoriin", 600, 600, Taustavärv, Esiplaanivärv);
+            matemaatikaviktoriin.Show();
         }
 
-        private void OpenImageMatchGame(object sender, EventArgs e)
+        private void AvaPiltidePaarideMäng(object sender, EventArgs e)
         {
-            ImageMatch imageMatch = new ImageMatch("Image Matcher", 600, 600);
-            imageMatch.Show();
+            PildiPaarid pildiPaarid = new PildiPaarid("Piltide paarid", 600, 600);
+            pildiPaarid.Show();
         }
 
-        private void ExitApplication(object sender, EventArgs e)
+        private void VäljuRakendusest(object sender, EventArgs e)
         {
             Application.Exit();
         }

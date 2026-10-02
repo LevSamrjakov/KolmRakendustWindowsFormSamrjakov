@@ -7,298 +7,298 @@ using System.Windows.Forms;
 
 namespace KolmRakendustWindowsFormSamrjakov
 {
-    public partial class ImageViewer : Form
+    public partial class PildiVaataja : Form
     {
-        PictureBox pictureBox;
-        Button button1, button2, button3, button4, button5, button6;
-        CheckBox checkBox;
-        OpenFileDialog openFileDialog;
-        ColorDialog colorDialog;
-        SaveFileDialog saveFileDialog;
+        PictureBox pildiKast;
+        Button nupp1, nupp2, nupp3, nupp4, nupp5, nupp6;
+        CheckBox märkeruut;
+        OpenFileDialog avaFailiDialoog;
+        ColorDialog värviDialoog;
+        SaveFileDialog salvestaFailiDialoog;
 
-        public ImageViewer(string title, int width, int height, Color Backcolor, Color Frontcolor)
+        public PildiVaataja(string pealkiri, int laius, int kõrgus, Color Taustavärv, Color Esiplaanivärv)
         {
             // Konstruktor
-            Text = title;
-            Size = new Size(width, height);
+            Text = pealkiri;
+            Size = new Size(laius, kõrgus);
             StartPosition = FormStartPosition.CenterScreen;
-            BackColor = Backcolor;
-            ForeColor = Frontcolor;
+            BackColor = Taustavärv;
+            ForeColor = Esiplaanivärv;
 
-            // Main Table Layout
-            TableLayoutPanel mainTableLayout = new TableLayoutPanel();
+            // Peamine tabeliraam
+            TableLayoutPanel peamineTabel = new TableLayoutPanel();
 
-            mainTableLayout.Dock = DockStyle.Fill;
+            peamineTabel.Dock = DockStyle.Fill;
 
-            // Columns
-            mainTableLayout.ColumnCount = 2;
+            // Veerud
+            peamineTabel.ColumnCount = 2;
 
-            mainTableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
+            peamineTabel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
 
-            mainTableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 85F));
+            peamineTabel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 85F));
 
-            // Rows
-            mainTableLayout.RowCount = 2;
+            // Read
+            peamineTabel.RowCount = 2;
 
-            mainTableLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 90F));
+            peamineTabel.RowStyles.Add(new RowStyle(SizeType.Percent, 90F));
 
-            mainTableLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
+            peamineTabel.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
 
-            // Separation
-            mainTableLayout.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
+            // Eraldus
+            peamineTabel.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
 
-            Controls.Add(mainTableLayout);
+            Controls.Add(peamineTabel);
 
-            // Picture Box
-            pictureBox = new PictureBox();
+            // Pildikast
+            pildiKast = new PictureBox();
 
-            pictureBox.Dock = DockStyle.Fill;
+            pildiKast.Dock = DockStyle.Fill;
 
-            pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+            pildiKast.SizeMode = PictureBoxSizeMode.Zoom;
 
-            pictureBox.BackColor = Backcolor;
+            pildiKast.BackColor = Taustavärv;
 
-            pictureBox.BorderStyle = BorderStyle.Fixed3D;
+            pildiKast.BorderStyle = BorderStyle.Fixed3D;
 
-            // PictureBox uses both columns
-            mainTableLayout.SetColumnSpan(pictureBox, 2);
+            // Pildikast kasutab mõlemat veergu
+            peamineTabel.SetColumnSpan(pildiKast, 2);
 
-            mainTableLayout.Controls.Add(pictureBox, 0, 0);
+            peamineTabel.Controls.Add(pildiKast, 0, 0);
 
-            // CheckBox
-            checkBox = new CheckBox();
+            // Märkeruut
+            märkeruut = new CheckBox();
 
-            checkBox.Text = "Stretch";
-            checkBox.AutoSize = true;
+            märkeruut.Text = "Venita";
+            märkeruut.AutoSize = true;
 
-            checkBox.Anchor = AnchorStyles.Left;
+            märkeruut.Anchor = AnchorStyles.Left;
 
-            checkBox.CheckedChanged += CheckBox_CheckedChanged;
+            märkeruut.CheckedChanged += Märkeruut_CheckedChanged;
 
-            mainTableLayout.Controls.Add(checkBox, 0, 1);
+            peamineTabel.Controls.Add(märkeruut, 0, 1);
 
-            // Buttons Panel
-            FlowLayoutPanel buttonPanel = new FlowLayoutPanel();
+            // Nuppude paneel
+            FlowLayoutPanel nupuPaneel = new FlowLayoutPanel();
 
-            buttonPanel.Dock = DockStyle.Fill;
+            nupuPaneel.Dock = DockStyle.Fill;
 
-            buttonPanel.FlowDirection = FlowDirection.RightToLeft;
+            nupuPaneel.FlowDirection = FlowDirection.RightToLeft;
 
-            buttonPanel.WrapContents = false;
+            nupuPaneel.WrapContents = false;
 
-            mainTableLayout.Controls.Add(buttonPanel, 1, 1);
+            peamineTabel.Controls.Add(nupuPaneel, 1, 1);
 
-            // Button 1
-            button1 = new Button();
+            // Nupp 1
+            nupp1 = new Button();
 
-            button1.Text = "Select a picture";
-            button1.Size = new Size(120, 40);
+            nupp1.Text = "Vali pilt";
+            nupp1.Size = new Size(120, 40);
 
-            button1.Click += ShowPictureButton_Click;
+            nupp1.Click += NäitaPiltiNupp_Click;
 
-            buttonPanel.Controls.Add(button1);
+            nupuPaneel.Controls.Add(nupp1);
 
-            // Button 2
-            button2 = new Button();
+            // Nupp 2
+            nupp2 = new Button();
 
-            button2.Text = "Clear the picture";
-            button2.Size = new Size(120, 40);
+            nupp2.Text = "Tühjenda pilt";
+            nupp2.Size = new Size(120, 40);
 
-            button2.Click += ClearImageButton_Click;
+            nupp2.Click += TühjendaPiltNupp_Click;
 
-            buttonPanel.Controls.Add(button2);
+            nupuPaneel.Controls.Add(nupp2);
 
-            // Button 3
-            button3 = new Button();
+            // Nupp 3
+            nupp3 = new Button();
 
-            button3.Text = "Set background color";
+            nupp3.Text = "Määra taustavärv";
 
-            button3.Size = new Size(150, 40);
+            nupp3.Size = new Size(150, 40);
 
-            button3.Click += BackgroundColorButton_Click;
+            nupp3.Click += TaustavärviNupp_Click;
 
-            buttonPanel.Controls.Add(button3);
+            nupuPaneel.Controls.Add(nupp3);
 
-            // Button 4
-            button4 = new Button();
-            button4.Text = "Save picture";
-            button4.Size = new Size(120, 40);
-            button4.Click += SavePictureButton_Click;
-            buttonPanel.Controls.Add(button4);
+            // Nupp 4
+            nupp4 = new Button();
+            nupp4.Text = "Salvesta pilt";
+            nupp4.Size = new Size(120, 40);
+            nupp4.Click += SalvestaPiltNupp_Click;
+            nupuPaneel.Controls.Add(nupp4);
 
-            // Button 5
-            button5 = new Button();
-            button5.Text = "Close";
-            button5.Size = new Size(100, 40);
-            button5.Click += CloseButton_Click;
-            buttonPanel.Controls.Add(button5);
+            // Nupp 5
+            nupp5 = new Button();
+            nupp5.Text = "Sulge";
+            nupp5.Size = new Size(100, 40);
+            nupp5.Click += SuleNupp_Click;
+            nupuPaneel.Controls.Add(nupp5);
 
-            // Button 6
-            button6 = new Button();
-            button6.Text = "Images";
-            button6.Size = new Size(80, 40);
-            button6.Click += ImageMenuButton_Click;
-            buttonPanel.Controls.Add(button6);
+            // Nupp 6
+            nupp6 = new Button();
+            nupp6.Text = "Pildid";
+            nupp6.Size = new Size(80, 40);
+            nupp6.Click += PiltideMenüüNupp_Click;
+            nupuPaneel.Controls.Add(nupp6);
 
-            // Open File Dialog
-            openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif|" + "All Files|*.*";
+            // Faili avamise dialoog
+            avaFailiDialoog = new OpenFileDialog();
+            avaFailiDialoog.Filter = "Pildifailid|*.jpg;*.jpeg;*.png;*.bmp;*.gif|" + "Kõik failid|*.*";
 
-            // Color Dialog
-            colorDialog = new ColorDialog();
+            // Värvidialoog
+            värviDialoog = new ColorDialog();
 
-            // Save File Dialog
-            saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Title = "Save picture";
-            saveFileDialog.Filter = "PNG Image|*.png|" + "JPEG Image|*.jpg|" + "Bitmap Image|*.bmp|" + "GIF Image|*.gif";
+            // Faili salvestamise dialoog
+            salvestaFailiDialoog = new SaveFileDialog();
+            salvestaFailiDialoog.Title = "Salvesta pilt";
+            salvestaFailiDialoog.Filter = "PNG pilt|*.png|" + "JPEG pilt|*.jpg|" + "Bitmap pilt|*.bmp|" + "GIF pilt|*.gif";
 
 
-            //// Random Images
-            //Random random = new Random();
+            //// Juhuslikud pildid
+            //Random juhuslik = new Random();
 
-            //int RandomNumber = random.Next(1, 5);
+            //int juhuslikNumber = juhuslik.Next(1, 5);
 
-            //Dictionary<int, string> Images = new Dictionary<int, string>();
+            //Dictionary<int, string> Pildid = new Dictionary<int, string>();
 
-            //Images.Add(1, "Image1");
-            //Images.Add(2, "Image2");
-            //Images.Add(3, "Image3");
-            //Images.Add(4, "Image4");
+            //Pildid.Add(1, "Image1");
+            //Pildid.Add(2, "Image2");
+            //Pildid.Add(3, "Image3");
+            //Pildid.Add(4, "Image4");
 
-            //string RandomImage = Images[RandomNumber];
+            //string juhuslikPilt = Pildid[juhuslikNumber];
 
-            //pictureBox.Image = Image.FromFile($@"..\..\Images\{RandomImage}.jpg");
+            //pildiKast.Image = Image.FromFile($@"..\..\Images\{juhuslikPilt}.jpg");
 
-            // Settings Menu
-            MainMenu menu = new MainMenu();
+            // Seadete menüü
+            MainMenu menüü = new MainMenu();
 
-            MenuItem menuSettings = new MenuItem("Settings");
+            MenuItem menüüSeaded = new MenuItem("Seaded");
 
-            MenuItem menuDarkTheme = new MenuItem("Dark Theme", new EventHandler(DarkTheme));
+            MenuItem menüüTumeTeema = new MenuItem("Tume teema", new EventHandler(TumeTeema));
 
-            menuSettings.MenuItems.Add(menuDarkTheme);
+            menüüSeaded.MenuItems.Add(menüüTumeTeema);
 
-            MenuItem menuBrightTheme = new MenuItem("Bright Theme", new EventHandler(BrightTheme));
+            MenuItem menüüHeleTeema = new MenuItem("Hele teema", new EventHandler(HeleTeema));
 
-            menuSettings.MenuItems.Add(menuBrightTheme);
+            menüüSeaded.MenuItems.Add(menüüHeleTeema);
 
-            menu.MenuItems.Add(menuSettings);
+            menüü.MenuItems.Add(menüüSeaded);
 
-            Menu = menu;
+            Menu = menüü;
         }
 
-        private void ImageMenuButton_Click(object sender, EventArgs e)
+        private void PiltideMenüüNupp_Click(object sender, EventArgs e)
         {
-            ImageMenu imageMenu = new ImageMenu(pictureBox);
-            imageMenu.ShowDialog();
+            PildiMenüü pildiMenüü = new PildiMenüü(pildiKast);
+            pildiMenüü.ShowDialog();
         }
 
-        private void ShowPictureButton_Click(object sender, EventArgs e)
+        private void NäitaPiltiNupp_Click(object sender, EventArgs e)
         {
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            if (avaFailiDialoog.ShowDialog() == DialogResult.OK)
             {
-                pictureBox.Load(openFileDialog.FileName);
+                pildiKast.Load(avaFailiDialoog.FileName);
 
-                AddImageToFolder(openFileDialog.FileName);
+                LisaPiltKausta(avaFailiDialoog.FileName);
             }
         }
 
-        private void AddImageToFolder(string imagePath)
+        private void LisaPiltKausta(string pildiTee)
         {
-            string imageFolder = Path.GetFullPath(@"..\..\Images");
+            string pildiKaust = Path.GetFullPath(@"..\..\Images");
 
-            if (!Directory.Exists(imageFolder))
+            if (!Directory.Exists(pildiKaust))
             {
-                Directory.CreateDirectory(imageFolder);
+                Directory.CreateDirectory(pildiKaust);
             }
 
-            string imageName = Path.GetFileName(imagePath);
+            string pildiNimi = Path.GetFileName(pildiTee);
 
-            string newImagePath = Path.Combine(imageFolder, imageName);
+            string uusPildiTee = Path.Combine(pildiKaust, pildiNimi);
 
-            if (File.Exists(newImagePath))
+            if (File.Exists(uusPildiTee))
             {
                 return;
             }
 
-            File.Copy(imagePath, newImagePath);
+            File.Copy(pildiTee, uusPildiTee);
         }
 
-        private void ClearImageButton_Click(object sender, EventArgs e)
+        private void TühjendaPiltNupp_Click(object sender, EventArgs e)
         {
-            pictureBox.Image = null;
+            pildiKast.Image = null;
         }
 
-        private void BackgroundColorButton_Click(object sender, EventArgs e)
+        private void TaustavärviNupp_Click(object sender, EventArgs e)
         {
-            if (colorDialog.ShowDialog() == DialogResult.OK)
+            if (värviDialoog.ShowDialog() == DialogResult.OK)
             {
-                pictureBox.BackColor = colorDialog.Color;
+                pildiKast.BackColor = värviDialoog.Color;
             }
         }
 
-        private void CloseButton_Click(object sender, EventArgs e)
+        private void SuleNupp_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        private void CheckBox_CheckedChanged(object sender, EventArgs e)
+        private void Märkeruut_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBox.Checked)
+            if (märkeruut.Checked)
             {
-                pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+                pildiKast.SizeMode = PictureBoxSizeMode.StretchImage;
             }
             else
             {
-                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+                pildiKast.SizeMode = PictureBoxSizeMode.Zoom;
             }
         }
 
-        private void SavePictureButton_Click(object sender, EventArgs e)
+        private void SalvestaPiltNupp_Click(object sender, EventArgs e)
         {
-            if (pictureBox.Image == null)
+            if (pildiKast.Image == null)
             {
-                MessageBox.Show("There is no image to save.");
+                MessageBox.Show("Salvestatavat pilti pole.");
                 return;
             }
 
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            if (salvestaFailiDialoog.ShowDialog() == DialogResult.OK)
             {
-                ImageFormat format = ImageFormat.Png;
+                ImageFormat formaat = ImageFormat.Png;
 
-                if (saveFileDialog.FilterIndex == 1)
+                if (salvestaFailiDialoog.FilterIndex == 1)
                 {
-                    format = ImageFormat.Png;
+                    formaat = ImageFormat.Png;
                 }
-                else if (saveFileDialog.FilterIndex == 2)
+                else if (salvestaFailiDialoog.FilterIndex == 2)
                 {
-                    format = ImageFormat.Jpeg;
+                    formaat = ImageFormat.Jpeg;
                 }
-                else if (saveFileDialog.FilterIndex == 3)
+                else if (salvestaFailiDialoog.FilterIndex == 3)
                 {
-                    format = ImageFormat.Bmp;
+                    formaat = ImageFormat.Bmp;
                 }
-                else if (saveFileDialog.FilterIndex == 4)
+                else if (salvestaFailiDialoog.FilterIndex == 4)
                 {
-                    format = ImageFormat.Gif;
+                    formaat = ImageFormat.Gif;
                 }
 
-                pictureBox.Image.Save(saveFileDialog.FileName, format);
+                pildiKast.Image.Save(salvestaFailiDialoog.FileName, formaat);
             }
         }
 
-        private void DarkTheme(object sender, EventArgs e)
+        private void TumeTeema(object sender, EventArgs e)
         {
             BackColor = Color.Black;
             ForeColor = Color.White;
-            pictureBox.BackColor = Color.Black;
+            pildiKast.BackColor = Color.Black;
         }
 
-        private void BrightTheme(object sender, EventArgs e)
+        private void HeleTeema(object sender, EventArgs e)
         {
             BackColor = Color.White;
             ForeColor = Color.Black;
-            pictureBox.BackColor = Color.White;
+            pildiKast.BackColor = Color.White;
         }
     }
 }

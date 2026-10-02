@@ -16,7 +16,7 @@ namespace KolmRakendustWindowsFormSamrjakov
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new StartingMenu());
+            Application.Run(new AlgusMenüü());
         }
     }
 }

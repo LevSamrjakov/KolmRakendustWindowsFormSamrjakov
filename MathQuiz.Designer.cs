@@ -1,6 +1,6 @@
 ﻿namespace KolmRakendustWindowsFormSamrjakov
 {
-    partial class MathQuiz
+    partial class Matemaatikaviktoriin
     {
         /// <summary>
         /// Required designer variable.
