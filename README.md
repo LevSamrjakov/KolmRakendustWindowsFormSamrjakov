@@ -16,9 +16,11 @@ Piltide paaride mäng
 3. kaartide pööramise animatsioon.
    
 Puudused
+
 Ekraanipiltidelt nägin kaks väikest puudust (joonis 10):
 – taimeri silt on kitsas ja tekst „Aeg sai läbi!“ on pooldi nähtav;
 – tumedal teemal ei ole keelatud tekst nähtav.
 
 Eeldatav edasiareng
+
 Esmalt parandaksin need puudused. Seejärel lisaksin pildivaatajasse slaidiseansi ja nupud. Pärast seda lisaks parimate tulemuste tabelid. lõpuks lisaksin vihjed, kahe mängija režiimi ja helid.
